@@ -26,9 +26,9 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServersFragment extends Fragment implements ServerAdapter.Listener {
+public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Listener {
 
-    private ServerAdapter mAdapter;
+    private ServerUnifiedAdapter mAdapter;
     private final List<ServerItem> mData = new ArrayList<>();
     private RecyclerView mRv;
     private TextView mEmpty;
@@ -48,7 +48,7 @@ public class ServersFragment extends Fragment implements ServerAdapter.Listener 
         if (btnRefresh != null) btnRefresh.setOnClickListener(x -> refreshAll());
 
         mRv.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mAdapter = new ServerAdapter(mData, this);
+        mAdapter = new ServerUnifiedAdapter(mData, this);
         mRv.setAdapter(mAdapter);
 
         mHandler = new Handler(Looper.getMainLooper());
@@ -202,24 +202,24 @@ public class ServersFragment extends Fragment implements ServerAdapter.Listener 
 
     private int pingHost(String host, int port) {
         try {
-            long start = System.currentTimeMillis();
+            long start = java.lang.System.currentTimeMillis();
             URL url = new URL("http://" + host + ":8080/health");
             HttpURLConnection c = (HttpURLConnection) url.openConnection();
             c.setConnectTimeout(2500);
             c.setReadTimeout(2500);
             c.setRequestMethod("GET");
             c.getResponseCode();
-            int ms = (int) (System.currentTimeMillis() - start);
+            int ms = (int) (java.lang.System.currentTimeMillis() - start);
             c.disconnect();
             return ms;
         } catch (Exception e) {
             // fallback — TCP connect
             try {
-                long start = System.currentTimeMillis();
+                long start = java.lang.System.currentTimeMillis();
                 java.net.Socket s = new java.net.Socket();
                 s.connect(new java.net.InetSocketAddress(host, port), 2500);
                 s.close();
-                return (int) (System.currentTimeMillis() - start);
+                return (int) (java.lang.System.currentTimeMillis() - start);
             } catch (Exception e2) {
                 return -2;
             }
@@ -230,7 +230,7 @@ public class ServersFragment extends Fragment implements ServerAdapter.Listener 
     public void onSelect(ServerItem it) {
         // Сохраняем SOCKS5-профиль локально и переключаемся
         try {
-            if (!mManager.hasProfile(it.name)) {
+            if (mManager.getProfile(it.name) == null) {
                 mManager.addProfile(it.name);
             }
             net.typeblog.socks.util.Profile p = mManager.getProfile(it.name);

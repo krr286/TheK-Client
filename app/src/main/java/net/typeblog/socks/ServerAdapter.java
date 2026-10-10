@@ -8,22 +8,29 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import net.typeblog.socks.util.Profile;
+
 import java.util.List;
 
 public class ServerAdapter extends RecyclerView.Adapter<ServerAdapter.VH> {
 
     public interface Listener {
-        void onSelect(ServerItem item);
-        void onLongClick(ServerItem item);
-        void onMtprotoClick(ServerItem item);
+        void onSelect(Profile p);
+        void onLongClick(Profile p);
     }
 
-    private final List<ServerItem> mData;
+    private final List<Profile> mData;
     private final Listener mListener;
+    private int mSelected = -1;
 
-    public ServerAdapter(List<ServerItem> data, Listener l) {
+    public ServerAdapter(List<Profile> data, Listener l) {
         mData = data;
         mListener = l;
+    }
+
+    public void setSelectedIndex(int i) {
+        mSelected = i;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -36,59 +43,26 @@ public class ServerAdapter extends RecyclerView.Adapter<ServerAdapter.VH> {
 
     @Override
     public void onBindViewHolder(@NonNull VH h, int pos) {
-        ServerItem it = mData.get(pos);
-        boolean isMt = it.type == ServerItem.TYPE_MTPROTO;
+        Profile p = mData.get(pos);
+        h.name.setText(p.getName());
+        h.addr.setText(p.getServer() + ":" + p.getPort());
+        h.flag.setText(flagFor(p.getServer()));
+        h.check.setVisibility(pos == mSelected ? View.VISIBLE : View.INVISIBLE);
+        if (h.ping != null) h.ping.setText("");
+        if (h.load != null) h.load.setText("");
+        if (h.action != null) h.action.setVisibility(View.GONE);
 
-        h.name.setText(it.name);
-        h.addr.setText(it.host + ":" + it.port);
-        h.flag.setText(flagFor(it));
-        h.check.setVisibility(!isMt && it.selected ? View.VISIBLE : View.INVISIBLE);
-
-        // Нагрузка
-        if (it.loadMax > 0) {
-            double pct = (double) it.loadCur / it.loadMax;
-            String ind = pct < 0.5 ? "🟢" : pct < 0.85 ? "🟡" : "🔴";
-            h.load.setText(ind + " " + it.loadCur + "/" + it.loadMax);
-        } else {
-            h.load.setText("");
-        }
-
-        // Пинг
-        if (it.pingMs == -1) {
-            h.ping.setText("···");
-            h.ping.setTextColor(0x99FFFFFF);
-        } else if (it.pingMs < 0) {
-            h.ping.setText("нет связи");
-            h.ping.setTextColor(0xFFFF3F3F);
-        } else {
-            h.ping.setText(it.pingMs + " мс");
-            if (it.pingMs < 150) h.ping.setTextColor(0xFF3FFF7A);
-            else if (it.pingMs < 400) h.ping.setTextColor(0xFFFFCC33);
-            else h.ping.setTextColor(0xFFFF3F3F);
-        }
-
-        // Действие — только для MTProto
-        if (isMt) {
-            h.action.setVisibility(View.VISIBLE);
-            h.action.setOnClickListener(v -> mListener.onMtprotoClick(it));
-            h.itemView.setOnClickListener(null);
-            h.itemView.setOnLongClickListener(null);
-        } else {
-            h.action.setVisibility(View.GONE);
-            h.itemView.setOnClickListener(v -> mListener.onSelect(it));
-            h.itemView.setOnLongClickListener(v -> {
-                mListener.onLongClick(it);
-                return true;
-            });
-        }
+        h.itemView.setOnClickListener(v -> mListener.onSelect(p));
+        h.itemView.setOnLongClickListener(v -> {
+            mListener.onLongClick(p);
+            return true;
+        });
     }
 
     @Override
     public int getItemCount() { return mData.size(); }
 
-    private static String flagFor(ServerItem it) {
-        if (it.type == ServerItem.TYPE_MTPROTO) return "\u2708\uFE0F"; // ✈️
-        String ip = it.host;
+    private static String flagFor(String ip) {
         if (ip == null) return "\uD83C\uDF10";
         String first = ip.contains(".") ? ip.substring(0, ip.indexOf('.')) : ip;
         int a;
