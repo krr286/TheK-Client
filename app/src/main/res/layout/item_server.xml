@@ -34,15 +34,39 @@
             android:textSize="15sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/srv_addr"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0.0.0.0:0"
-            android:textColor="?android:textColorSecondary"
-            android:textSize="12sp"
-            android:layout_marginTop="2dp" />
+            android:orientation="horizontal"
+            android:layout_marginTop="3dp">
+
+            <TextView
+                android:id="@+id/srv_addr"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.0.0.0:0"
+                android:textColor="?android:textColorSecondary"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/srv_ping"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="#99FFFFFF"
+                android:textSize="12sp"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/srv_load"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="12sp"
+        android:layout_marginEnd="8dp"
+        android:textColor="#99FFFFFF" />
 
     <TextView
         android:id="@+id/srv_check"
@@ -52,4 +76,19 @@
         android:textColor="?attr/colorAccent"
         android:textSize="20sp"
         android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/srv_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Открыть"
+        android:textColor="#FFFFFFFF"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="7dp"
+        android:paddingBottom="7dp"
+        android:background="@drawable/bg_btn_telegram"
+        android:visibility="gone" />
 </LinearLayout>

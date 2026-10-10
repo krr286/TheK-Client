@@ -1,153 +1,275 @@
 package net.typeblog.socks;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import net.typeblog.socks.util.Profile;
 import net.typeblog.socks.util.ProfileManager;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ServersFragment extends Fragment implements ServerAdapter.Listener {
 
-    private ProfileManager mManager;
     private ServerAdapter mAdapter;
-    private final List<Profile> mData = new ArrayList<>();
+    private final List<ServerItem> mData = new ArrayList<>();
     private RecyclerView mRv;
     private TextView mEmpty;
+    private ProfileManager mManager;
+    private Handler mHandler;
+    private Runnable mTicker;
+    private boolean mLoading = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup c, Bundle s) {
         View v = inflater.inflate(R.layout.fragment_servers, c, false);
         mManager = new ProfileManager(getActivity().getApplicationContext());
         mRv = v.findViewById(R.id.servers_rv);
+        mEmpty = v.findViewById(R.id.servers_empty);
 
         android.widget.ImageButton btnRefresh = v.findViewById(R.id.btn_refresh_servers);
-        if (btnRefresh != null) {
-            btnRefresh.setOnClickListener(x -> doRefresh());
-        }
-        mEmpty = v.findViewById(R.id.servers_empty);
+        if (btnRefresh != null) btnRefresh.setOnClickListener(x -> refreshAll());
 
         mRv.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter = new ServerAdapter(mData, this);
         mRv.setAdapter(mAdapter);
 
-        load();
+        mHandler = new Handler(Looper.getMainLooper());
+        mTicker = new Runnable() {
+            @Override public void run() {
+                refreshAll();
+                mHandler.postDelayed(this, 60_000);
+            }
+        };
+
+        refreshAll();
         return v;
     }
 
-    private void load() {
-        mData.clear();
-        String[] names = mManager.getProfiles();
-        String defName = mManager.getDefault().getName();
-        int sel = -1;
-        for (String n : names) {
-            if ("По умолчанию".equals(n)) continue;
-            Profile p = mManager.getProfile(n);
-            if (p != null) {
-                mData.add(p);
-                if (n.equals(defName)) sel = mData.size() - 1;
-            }
+    @Override
+    public void onResume() {
+        super.onResume();
+        mHandler.postDelayed(mTicker, 60_000);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mHandler.removeCallbacks(mTicker);
+    }
+
+    private String getSubCode() {
+        SharedPreferences p = getActivity().getSharedPreferences("thek_prefs", 0);
+        String c = p.getString("sub_token", "");
+        if (c == null || c.isEmpty()) c = p.getString("code", "");
+        if (c == null || c.isEmpty()) c = p.getString("user_code", "");
+        return c == null ? "" : c.trim();
+    }
+
+    private void refreshAll() {
+        if (mLoading) return;
+        mLoading = true;
+        final String code = getSubCode();
+
+        if (code.isEmpty()) {
+            mLoading = false;
+            mData.clear();
+            mAdapter.notifyDataSetChanged();
+            mEmpty.setVisibility(View.VISIBLE);
+            mRv.setVisibility(View.GONE);
+            mEmpty.setText("Введи код подписки в разделе «Главная»\nи серверы появятся здесь");
+            return;
         }
-        mAdapter.setSelectedIndex(sel);
-        mEmpty.setVisibility(mData.isEmpty() ? View.VISIBLE : View.GONE);
-        mRv.setVisibility(mData.isEmpty() ? View.GONE : View.VISIBLE);
-    }
 
-    @Override
-    public void onSelect(Profile p) {
-        mManager.switchDefault(p.getName());
-        load();
-        Toast.makeText(getActivity(), "Выбран: " + p.getName(), Toast.LENGTH_SHORT).show();
-    }
+        new Thread(() -> {
+            final List<ServerItem> list = new ArrayList<>();
+            String err = null;
+            try {
+                JSONObject resp = RemoteAssets.getCheckResult(getActivity(), code);
+                if (resp == null) {
+                    err = "Нет ответа от сервера";
+                } else if (!resp.optBoolean("valid", false)) {
+                    err = "Код недействителен";
+                } else {
+                    // MTProto — сверху
+                    JSONArray mt = resp.optJSONArray("mtproto");
+                    if (mt != null) {
+                        for (int i = 0; i < mt.length(); i++) {
+                            JSONObject o = mt.getJSONObject(i);
+                            ServerItem it = new ServerItem(ServerItem.TYPE_MTPROTO);
+                            it.name = "Telegram";
+                            it.host = o.optString("server", "");
+                            it.port = o.optInt("port", 8443);
+                            it.mtprotoLink = o.optString("link", "");
+                            it.expiresAt = o.optString("expires_at", "");
+                            it.loadCur = o.optInt("load_cur", 0);
+                            it.loadMax = o.optInt("load_max", 10);
+                            list.add(it);
+                        }
+                    }
 
-    @Override
-    public void onLongClick(Profile p) {
-        new AlertDialog.Builder(getActivity())
-            .setItems(new String[]{"Редактировать", "Удалить"}, (d, w) -> {
-                if (w == 0) editDialog(p);
-                else deleteDialog(p);
-            })
-            .show();
-    }
-
-    private void editDialog(Profile p) {
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_server, null);
-        EditText n = view.findViewById(R.id.dlg_name);
-        EditText s = view.findViewById(R.id.dlg_server);
-        EditText pt = view.findViewById(R.id.dlg_port);
-        EditText u = view.findViewById(R.id.dlg_user);
-        EditText pw = view.findViewById(R.id.dlg_pass);
-
-        n.setText(p.getName());
-        s.setText(p.getServer());
-        pt.setText(String.valueOf(p.getPort()));
-        u.setText(p.getUsername());
-        pw.setText(p.getPassword());
-
-        new AlertDialog.Builder(getActivity())
-            .setTitle("Редактировать сервер")
-            .setView(view)
-            .setPositiveButton("Сохранить", (d, w) -> {
-                String srv = s.getText().toString().trim();
-                String port = pt.getText().toString().trim();
-                if (TextUtils.isEmpty(srv) || TextUtils.isEmpty(port)) {
-                    Toast.makeText(getActivity(), "Заполни IP и порт", Toast.LENGTH_SHORT).show();
-                    return;
+                    // SOCKS5 — ниже
+                    JSONArray socks = resp.optJSONArray("servers");
+                    if (socks != null) {
+                        for (int i = 0; i < socks.length(); i++) {
+                            Object raw = socks.get(i);
+                            JSONObject o;
+                            if (raw instanceof JSONObject) {
+                                o = (JSONObject) raw;
+                            } else {
+                                // строковый формат «socks5://...» — пропускаем
+                                continue;
+                            }
+                            ServerItem it = new ServerItem(ServerItem.TYPE_SOCKS);
+                            it.name = o.optString("name", "Сервер");
+                            it.host = o.optString("host", "");
+                            it.port = o.optInt("port", 1080);
+                            it.user = o.optString("user", "");
+                            it.pass = o.optString("pass", "");
+                            it.loadCur = o.optInt("load_cur", 0);
+                            it.loadMax = o.optInt("load_max", 10);
+                            list.add(it);
+                        }
+                    }
                 }
-                p.setServer(srv);
-                try { p.setPort(Integer.parseInt(port)); } catch (Exception ex) { p.setPort(1080); }
-                String user = u.getText().toString().trim();
-                String pass = pw.getText().toString().trim();
-                p.setIsUserpw(!TextUtils.isEmpty(user));
-                p.setUsername(user);
-                p.setPassword(pass);
-                load();
-            })
-            .setNegativeButton("Отмена", null)
-            .show();
-    }
+            } catch (Exception e) {
+                err = e.getMessage();
+            }
 
-    private void deleteDialog(Profile p) {
-        new AlertDialog.Builder(getActivity())
-            .setTitle("Удалить сервер?")
-            .setMessage("Удалить \"" + p.getName() + "\"?")
-            .setPositiveButton("Удалить", (d, w) -> {
-                mManager.removeProfile(p.getName());
-                load();
-            })
-            .setNegativeButton("Отмена", null)
-            .show();
-    }
+            final String ferr = err;
+            final List<ServerItem> fl = list;
 
-    private void doRefresh() {
-        android.widget.Toast.makeText(getActivity(), "Обновляю...", android.widget.Toast.LENGTH_SHORT).show();
-        SubscriptionSync.forceSync(getActivity(), (added, removed, error) -> {
             if (getActivity() == null) return;
             getActivity().runOnUiThread(() -> {
-                if (error != null) {
-                    android.widget.Toast.makeText(getActivity(),
-                        "Ошибка: " + error, android.widget.Toast.LENGTH_LONG).show();
-                } else {
-                    android.widget.Toast.makeText(getActivity(),
-                        "Готово: +" + added + " / -" + removed,
-                        android.widget.Toast.LENGTH_SHORT).show();
-                    load();
+                mData.clear();
+                mData.addAll(fl);
+
+                // Определяем текущий выбранный — из default profile
+                String defName = mManager.getDefault().getName();
+                for (ServerItem it : mData) {
+                    if (it.type == ServerItem.TYPE_SOCKS && it.name.equals(defName)) {
+                        it.selected = true;
+                    }
                 }
+
+                mAdapter.notifyDataSetChanged();
+
+                if (mData.isEmpty()) {
+                    mEmpty.setVisibility(View.VISIBLE);
+                    mRv.setVisibility(View.GONE);
+                    mEmpty.setText(ferr != null ? ("Ошибка: " + ferr) : "Серверов нет");
+                } else {
+                    mEmpty.setVisibility(View.GONE);
+                    mRv.setVisibility(View.VISIBLE);
+                }
+
+                mLoading = false;
+                pingAll();
             });
-        });
+        }).start();
     }
 
+    private void pingAll() {
+        for (final ServerItem it : new ArrayList<>(mData)) {
+            if (it.host == null || it.host.isEmpty()) continue;
+            new Thread(() -> {
+                final int ms = pingHost(it.host, it.port);
+                if (getActivity() == null) return;
+                getActivity().runOnUiThread(() -> {
+                    it.pingMs = ms;
+                    mAdapter.notifyDataSetChanged();
+                });
+            }).start();
+        }
+    }
+
+    private int pingHost(String host, int port) {
+        try {
+            long start = System.currentTimeMillis();
+            URL url = new URL("http://" + host + ":8080/health");
+            HttpURLConnection c = (HttpURLConnection) url.openConnection();
+            c.setConnectTimeout(2500);
+            c.setReadTimeout(2500);
+            c.setRequestMethod("GET");
+            c.getResponseCode();
+            int ms = (int) (System.currentTimeMillis() - start);
+            c.disconnect();
+            return ms;
+        } catch (Exception e) {
+            // fallback — TCP connect
+            try {
+                long start = System.currentTimeMillis();
+                java.net.Socket s = new java.net.Socket();
+                s.connect(new java.net.InetSocketAddress(host, port), 2500);
+                s.close();
+                return (int) (System.currentTimeMillis() - start);
+            } catch (Exception e2) {
+                return -2;
+            }
+        }
+    }
+
+    @Override
+    public void onSelect(ServerItem it) {
+        // Сохраняем SOCKS5-профиль локально и переключаемся
+        try {
+            if (!mManager.hasProfile(it.name)) {
+                mManager.addProfile(it.name);
+            }
+            net.typeblog.socks.util.Profile p = mManager.getProfile(it.name);
+            p.setServer(it.host);
+            p.setPort(it.port);
+            p.setIsUserpw(it.user != null && !it.user.isEmpty());
+            p.setUsername(it.user == null ? "" : it.user);
+            p.setPassword(it.pass == null ? "" : it.pass);
+            mManager.switchDefault(it.name);
+            Toast.makeText(getActivity(), "Выбран: " + it.name, Toast.LENGTH_SHORT).show();
+            refreshAll();
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), "Ошибка: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onLongClick(ServerItem it) {
+        Toast.makeText(getActivity(), "Долгое нажатие: " + it.name, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onMtprotoClick(ServerItem it) {
+        if (it.mtprotoLink == null || it.mtprotoLink.isEmpty()) {
+            Toast.makeText(getActivity(), "Ссылка недоступна", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        try {
+            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(it.mtprotoLink));
+            i.setPackage("org.telegram.messenger");
+            startActivity(i);
+        } catch (Exception e) {
+            try {
+                Intent i = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(it.mtprotoLink.replace("tg://", "https://t.me/")));
+                startActivity(i);
+            } catch (Exception e2) {
+                Toast.makeText(getActivity(), "Telegram не установлен", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }

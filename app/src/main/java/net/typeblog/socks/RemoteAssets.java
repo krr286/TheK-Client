@@ -101,4 +101,17 @@ public class RemoteAssets {
             return null;
         }
     }
+
+
+    // ===== Получить серверы юзера по коду подписки =====
+    public static org.json.JSONObject getCheckResult(Context ctx, String code) {
+        try {
+            String raw = httpGet(BASE + "/check/" + code);
+            if (raw == null) return null;
+            return new org.json.JSONObject(raw);
+        } catch (Exception e) {
+            android.util.Log.e("THEK_NET", "getCheckResult error: " + e.getMessage(), e);
+            return null;
+        }
+    }
 }
