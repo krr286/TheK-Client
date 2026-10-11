@@ -31,41 +31,47 @@
 
     </LinearLayout>
 
-    <!-- === DRAWER === -->
     <LinearLayout
         android:id="@+id/drawer_panel"
-        android:layout_width="300dp"
+        android:layout_width="290dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="#0A0E1A"
         android:orientation="vertical">
 
-        <!-- Шапка с граффити -->
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="160dp"
             android:background="@drawable/bg_drawer_header">
 
-            <ImageView
-                android:id="@+id/drawer_logo"
-                android:layout_width="match_parent"
-                android:layout_height="110dp"
+            <TextView
+                android:id="@+id/drawer_logo_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="THEK"
+                android:textColor="#FFFFFF"
+                android:textSize="42sp"
+                android:textStyle="bold|italic"
+                android:letterSpacing="0.05"
+                android:fontFamily="sans-serif-black"
+                android:shadowColor="#707C5CFF"
+                android:shadowDx="0"
+                android:shadowDy="4"
+                android:shadowRadius="16"
                 android:layout_gravity="center_horizontal|top"
-                android:layout_marginTop="48dp"
-                android:src="@drawable/ic_thek_graffiti"
-                android:scaleType="centerInside"
-                android:visibility="visible" />
+                android:layout_marginTop="30dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="P R O X Y   C L I E N T"
                 android:textColor="#A0A8BF"
-                android:textSize="11sp"
-                android:letterSpacing="0.3"
+                android:textSize="10sp"
+                android:letterSpacing="0.25"
                 android:fontFamily="sans-serif-medium"
                 android:layout_gravity="bottom|center_horizontal"
                 android:gravity="center"
-                android:paddingBottom="22dp" />
+                android:paddingBottom="18dp" />
         </FrameLayout>
 
         <LinearLayout
@@ -76,12 +82,10 @@
             android:gravity="center_vertical"
             android:paddingStart="28dp"
             android:paddingEnd="20dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
+            android:layout_marginTop="16dp"
             android:background="?android:attr/selectableItemBackground">
             <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_nav_home" android:tint="#7C5CFF" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:text="Главная" android:textColor="#F5F7FB" android:textSize="16sp" android:textStyle="bold" android:fontFamily="sans-serif-black" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:text="Главная" android:textColor="#F5F7FB" android:textSize="16sp" android:fontFamily="sans-serif-medium" android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -92,12 +96,10 @@
             android:gravity="center_vertical"
             android:paddingStart="28dp"
             android:paddingEnd="20dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
             android:visibility="gone"
             android:background="?android:attr/selectableItemBackground">
             <TextView android:layout_width="22dp" android:layout_height="22dp" android:text="✈" android:textSize="18sp" android:textColor="#7C5CFF" android:gravity="center" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:text="Для Telegram" android:textColor="#F5F7FB" android:textSize="15sp" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:text="Для Telegram" android:textColor="#F5F7FB" android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -108,11 +110,9 @@
             android:gravity="center_vertical"
             android:paddingStart="28dp"
             android:paddingEnd="20dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
             android:background="?android:attr/selectableItemBackground">
             <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_nav_servers" android:tint="#7C5CFF" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:text="Сервера" android:textColor="#F5F7FB" android:textSize="16sp" android:textStyle="bold" android:fontFamily="sans-serif-black" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:text="Сервера" android:textColor="#F5F7FB" android:textSize="16sp" android:fontFamily="sans-serif-medium" android:textStyle="bold" />
         </LinearLayout>
 
         <View
@@ -132,11 +132,9 @@
             android:gravity="center_vertical"
             android:paddingStart="28dp"
             android:paddingEnd="20dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
             android:background="?android:attr/selectableItemBackground">
             <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_nav_settings" android:tint="#7C5CFF" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:text="Настройки" android:textColor="#F5F7FB" android:textSize="16sp" android:textStyle="bold" android:fontFamily="sans-serif-black" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:text="Настройки" android:textColor="#F5F7FB" android:textSize="16sp" android:fontFamily="sans-serif-medium" android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -147,11 +145,16 @@
             android:gravity="center_vertical"
             android:paddingStart="28dp"
             android:paddingEnd="20dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="12dp"
             android:background="?android:attr/selectableItemBackground">
             <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_nav_info" android:tint="#7C5CFF" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:text="О приложении" android:textColor="#F5F7FB" android:textSize="16sp" android:textStyle="bold" android:fontFamily="sans-serif-black" />
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:text="О приложении"
+                android:textColor="#F5F7FB"
+                android:textSize="16sp"
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />
@@ -159,13 +162,13 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="PROXY CLIENT"
+            android:text="P R O X Y   C L I E N T"
             android:textColor="#6B7290"
             android:textSize="10sp"
             android:fontFamily="sans-serif-medium"
             android:gravity="center"
             android:paddingBottom="20dp"
-            android:letterSpacing="0.4" />
+            android:letterSpacing="0.25" />
     </LinearLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>
