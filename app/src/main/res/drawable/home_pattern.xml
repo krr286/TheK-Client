@@ -1,22 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="400dp"
-    android:height="800dp"
-    android:viewportWidth="400"
-    android:viewportHeight="800">
-    <!-- Диагональные тонкие линии -->
-    <path android:strokeColor="#7A3FF7" android:strokeWidth="1" android:strokeAlpha="0.10"
-        android:fillColor="#00000000"
-        android:pathData="M-100,200 L500,-100 M-100,400 L500,100 M-100,600 L500,300 M-100,800 L500,500 M-100,1000 L500,700" />
-    <!-- Точки сетки -->
-    <path android:fillColor="#7A3FF7" android:fillAlpha="0.15"
-        android:pathData="M60,150 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0
-M140,250 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0
-M220,150 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0
-M300,250 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0
-M100,400 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0
-M200,500 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0
-M320,450 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0
-M80,650 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0
-M240,700 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0" />
-</vector>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#00000000" />
+</shape>

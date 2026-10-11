@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
-    <solid android:color="#3A1A2E" />
-    <stroke android:width="3dp" android:color="#FF3F3F" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Внешнее свечение -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="50%"
+                android:startColor="#507C5CFF"
+                android:endColor="#007C5CFF" />
+        </shape>
+    </item>
+    <!-- Основной круг -->
+    <item android:top="20dp" android:bottom="20dp" android:left="20dp" android:right="20dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="linear"
+                android:angle="135"
+                android:startColor="#1A1F33"
+                android:endColor="#0A0E1A" />
+            <stroke android:width="2dp" android:color="#7C5CFF" />
+        </shape>
+    </item>
+</layer-list>

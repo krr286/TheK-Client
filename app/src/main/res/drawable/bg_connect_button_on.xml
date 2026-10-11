@@ -1,5 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
-    <solid android:color="#0F2A1A" />
-    <stroke android:width="3dp" android:color="#3FFF7A" />
-</shape>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Внешнее свечение (успех) -->
+    <item>
+        <shape android:shape="oval">
+            <gradient
+                android:type="radial"
+                android:gradientRadius="50%"
+                android:startColor="#5022C55E"
+                android:endColor="#0022C55E" />
+        </shape>
+    </item>
+    <!-- Внешняя рамка -->
+    <item android:top="20dp" android:bottom="20dp" android:left="20dp" android:right="20dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="linear"
+                android:angle="135"
+                android:startColor="#1F4A36"
+                android:endColor="#0F261A" />
+            <stroke android:width="2dp" android:color="#22C55E" />
+        </shape>
+    </item>
+    <!-- Внутренний круг — впуклость -->
+    <item android:top="44dp" android:bottom="44dp" android:left="44dp" android:right="44dp">
+        <shape android:shape="oval">
+            <gradient
+                android:type="linear"
+                android:angle="135"
+                android:startColor="#0A1F14"
+                android:endColor="#0F2A1C" />
+            <stroke android:width="1dp" android:color="#2022C55E" />
+        </shape>
+    </item>
+</layer-list>
