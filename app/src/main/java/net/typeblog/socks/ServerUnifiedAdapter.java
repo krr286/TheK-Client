@@ -10,7 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class ServerUnifiedAdapter extends RecyclerView.Adapter<ServerUnifiedAdapter.VH> {
+public class ServerUnifiedAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int TYPE_SERVER = 0;
+    private static final int TYPE_DIVIDER = 1;
 
     public interface Listener {
         void onSelect(ServerItem item);
@@ -26,17 +29,27 @@ public class ServerUnifiedAdapter extends RecyclerView.Adapter<ServerUnifiedAdap
         mListener = l;
     }
 
+    @Override
+    public int getItemViewType(int pos) {
+        return mData.get(pos).showDivider ? TYPE_DIVIDER : TYPE_SERVER;
+    }
+
     @NonNull
     @Override
-    public VH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-            .inflate(R.layout.item_server, parent, false);
-        return new VH(v);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inf = LayoutInflater.from(parent.getContext());
+        if (viewType == TYPE_DIVIDER) {
+            return new DividerVH(inf.inflate(R.layout.item_section_header, parent, false));
+        }
+        return new ServerVH(inf.inflate(R.layout.item_server, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VH h, int pos) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int pos) {
+        if (holder instanceof DividerVH) return;
+
         ServerItem it = mData.get(pos);
+        ServerVH h = (ServerVH) holder;
         boolean isMt = it.type == ServerItem.TYPE_MTPROTO;
 
         h.name.setText(it.name);
@@ -44,16 +57,26 @@ public class ServerUnifiedAdapter extends RecyclerView.Adapter<ServerUnifiedAdap
         h.flag.setText(flagFor(it));
         h.check.setVisibility(!isMt && it.selected ? View.VISIBLE : View.INVISIBLE);
 
+        // ===== Нагрузка =====
         if (h.load != null) {
-            if (it.loadMax > 0) {
-                double pct = (double) it.loadCur / it.loadMax;
+            int cur, max;
+            if (isMt && it.serverTotal > 0) {
+                cur = it.serverUsed;
+                max = it.serverTotal;
+            } else {
+                cur = it.loadCur;
+                max = it.loadMax;
+            }
+            if (max > 0) {
+                double pct = (double) cur / max;
                 String ind = pct < 0.5 ? "\uD83D\uDFE2" : pct < 0.85 ? "\uD83D\uDFE1" : "\uD83D\uDD34";
-                h.load.setText(ind + " " + it.loadCur + "/" + it.loadMax);
+                h.load.setText(ind + " " + cur + "/" + max);
             } else {
                 h.load.setText("");
             }
         }
 
+        // ===== Пинг =====
         if (h.ping != null) {
             if (it.pingMs == -1) {
                 h.ping.setText("\u00B7\u00B7\u00B7");
@@ -106,9 +129,9 @@ public class ServerUnifiedAdapter extends RecyclerView.Adapter<ServerUnifiedAdap
         return "\uD83C\uDF10";
     }
 
-    static class VH extends RecyclerView.ViewHolder {
+    static class ServerVH extends RecyclerView.ViewHolder {
         TextView name, addr, check, flag, ping, load, action;
-        VH(View v) {
+        ServerVH(View v) {
             super(v);
             name = v.findViewById(R.id.srv_name);
             addr = v.findViewById(R.id.srv_addr);
@@ -118,5 +141,9 @@ public class ServerUnifiedAdapter extends RecyclerView.Adapter<ServerUnifiedAdap
             load = v.findViewById(R.id.srv_load);
             action = v.findViewById(R.id.srv_action);
         }
+    }
+
+    static class DividerVH extends RecyclerView.ViewHolder {
+        DividerVH(View v) { super(v); }
     }
 }

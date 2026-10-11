@@ -16,6 +16,7 @@ public class ServerItem {
     public int loadMax = 10;
     public int pingMs = -1; // -1 = не измерен, -2 = ошибка
     public boolean selected = false;
+    public boolean showDivider = false;
 
     public ServerItem(int type) { this.type = type; }
 }

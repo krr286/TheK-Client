@@ -121,12 +121,16 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
                             it.expiresAt = o.optString("expires_at", "");
                             it.loadCur = o.optInt("load_cur", 0);
                             it.loadMax = o.optInt("load_max", 10);
+                            if (hasMtproto && i == 0) {
+                                it.showDivider = true;
+                            }
                             list.add(it);
                         }
                     }
 
                     // SOCKS5 — ниже
                     JSONArray socks = resp.optJSONArray("servers");
+                    boolean hasMtproto = !list.isEmpty();
                     if (socks != null) {
                         for (int i = 0; i < socks.length(); i++) {
                             Object raw = socks.get(i);
