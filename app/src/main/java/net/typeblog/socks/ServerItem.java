@@ -14,7 +14,9 @@ public class ServerItem {
     public String expiresAt = "";
     public int loadCur = 0;
     public int loadMax = 10;
-    public int pingMs = -1; // -1 = не измерен, -2 = ошибка
+    public int serverUsed = 0;
+    public int serverTotal = 0;
+    public int pingMs = -1;
     public boolean selected = false;
     public boolean showDivider = false;
 

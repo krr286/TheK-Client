@@ -16,12 +16,14 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import net.typeblog.socks.util.Profile;
 import net.typeblog.socks.util.ProfileManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
+import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,8 +110,9 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
                 } else if (!resp.optBoolean("valid", false)) {
                     err = "Код недействителен";
                 } else {
-                    // MTProto — сверху
+                    // ===== MTProto =====
                     JSONArray mt = resp.optJSONArray("mtproto");
+                    boolean hasMtproto = false;
                     if (mt != null) {
                         for (int i = 0; i < mt.length(); i++) {
                             JSONObject o = mt.getJSONObject(i);
@@ -121,26 +124,20 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
                             it.expiresAt = o.optString("expires_at", "");
                             it.loadCur = o.optInt("load_cur", 0);
                             it.loadMax = o.optInt("load_max", 10);
-                            if (hasMtproto && i == 0) {
-                                it.showDivider = true;
-                            }
+                            it.serverUsed = o.optInt("server_used", 0);
+                            it.serverTotal = o.optInt("server_total", 0);
                             list.add(it);
+                            hasMtproto = true;
                         }
                     }
 
-                    // SOCKS5 — ниже
+                    // ===== SOCKS5 =====
                     JSONArray socks = resp.optJSONArray("servers");
-                    boolean hasMtproto = !list.isEmpty();
                     if (socks != null) {
                         for (int i = 0; i < socks.length(); i++) {
                             Object raw = socks.get(i);
-                            JSONObject o;
-                            if (raw instanceof JSONObject) {
-                                o = (JSONObject) raw;
-                            } else {
-                                // строковый формат «socks5://...» — пропускаем
-                                continue;
-                            }
+                            if (!(raw instanceof JSONObject)) continue;
+                            JSONObject o = (JSONObject) raw;
                             ServerItem it = new ServerItem(ServerItem.TYPE_SOCKS);
                             it.name = o.optString("name", "Сервер");
                             it.host = o.optString("host", "");
@@ -149,6 +146,9 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
                             it.pass = o.optString("pass", "");
                             it.loadCur = o.optInt("load_cur", 0);
                             it.loadMax = o.optInt("load_max", 10);
+                            if (hasMtproto && i == 0) {
+                                it.showDivider = true;
+                            }
                             list.add(it);
                         }
                     }
@@ -165,7 +165,6 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
                 mData.clear();
                 mData.addAll(fl);
 
-                // Определяем текущий выбранный — из default profile
                 String defName = mManager.getDefault().getName();
                 for (ServerItem it : mData) {
                     if (it.type == ServerItem.TYPE_SOCKS && it.name.equals(defName)) {
@@ -192,6 +191,7 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
 
     private void pingAll() {
         for (final ServerItem it : new ArrayList<>(mData)) {
+            if (it.showDivider) continue;
             if (it.host == null || it.host.isEmpty()) continue;
             new Thread(() -> {
                 final int ms = pingHost(it.host, it.port);
@@ -217,10 +217,9 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
             c.disconnect();
             return ms;
         } catch (Exception e) {
-            // fallback — TCP connect
             try {
                 long start = java.lang.System.currentTimeMillis();
-                java.net.Socket s = new java.net.Socket();
+                Socket s = new Socket();
                 s.connect(new java.net.InetSocketAddress(host, port), 2500);
                 s.close();
                 return (int) (java.lang.System.currentTimeMillis() - start);
@@ -232,12 +231,12 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
 
     @Override
     public void onSelect(ServerItem it) {
-        // Сохраняем SOCKS5-профиль локально и переключаемся
         try {
-            if (mManager.getProfile(it.name) == null) {
-                mManager.addProfile(it.name);
+            Profile p = mManager.getProfile(it.name);
+            if (p == null) {
+                p = mManager.addProfile(it.name);
             }
-            net.typeblog.socks.util.Profile p = mManager.getProfile(it.name);
+            if (p == null) return;
             p.setServer(it.host);
             p.setPort(it.port);
             p.setIsUserpw(it.user != null && !it.user.isEmpty());
