@@ -303,12 +303,37 @@ public class HomeFragment extends Fragment implements ServerAdapter.Listener {
                     int added = parseAndSaveServers(json);
                     android.content.SharedPreferences sp =
                         getActivity().getSharedPreferences("thek_prefs", 0);
+                    // Определяем — был ли другой код
+                    String oldCode = sp.getString("sub_token", "");
+                    boolean codeChanged = !oldCode.isEmpty() && !oldCode.equals(code);
+
+                    // Если код сменился — чистим старые профили и скрытые
+                    if (codeChanged) {
+                        try {
+                            net.typeblog.socks.util.ProfileManager pm =
+                                new net.typeblog.socks.util.ProfileManager(getActivity().getApplicationContext());
+                            String[] names = pm.getProfiles();
+                            for (String n : names) {
+                                if (!"По умолчанию".equals(n)) {
+                                    try { pm.removeProfile(n); } catch (Exception ignored) {}
+                                }
+                            }
+                        } catch (Exception ignored) {}
+                        sp.edit().remove("hidden_servers").apply();
+                    }
+
                     sp.edit()
                       .putBoolean("has_subscription", true)
                       .putString("sub_token", code)
                       .putString("code", code)
                       .putString("user_code", code)
                       .apply();
+
+                    if (codeChanged) {
+                        android.widget.Toast.makeText(getActivity(),
+                            "Аккаунт переключён. Серверы обновлены.",
+                            android.widget.Toast.LENGTH_LONG).show();
+                    }
                     android.widget.Toast.makeText(getActivity(),
                         "✅ Подписка активирована! Добавлено серверов: " + added,
                         android.widget.Toast.LENGTH_LONG).show();

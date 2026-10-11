@@ -33,6 +33,7 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
     private RecyclerView mRv;
     private TextView mEmpty;
     private TextView mActionBtn;
+    private android.widget.ImageButton mRefreshBtn;
     private ProfileManager mManager;
     private Handler mHandler;
     private Runnable mTicker;
@@ -46,8 +47,16 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
         mEmpty = v.findViewById(R.id.servers_empty);
         mActionBtn = v.findViewById(R.id.servers_action_btn);
 
-        android.widget.ImageButton btnRefresh = v.findViewById(R.id.btn_refresh_servers);
-        if (btnRefresh != null) btnRefresh.setOnClickListener(x -> refreshAll());
+        mRefreshBtn = v.findViewById(R.id.btn_refresh_servers);
+        if (mRefreshBtn != null) {
+            mRefreshBtn.setOnClickListener(x -> {
+                if (mLoading) {
+                    android.widget.Toast.makeText(getActivity(), "Уже обновляется...", android.widget.Toast.LENGTH_SHORT).show();
+                } else {
+                    refreshAll();
+                }
+            });
+        }
 
         if (mActionBtn != null) {
             mActionBtn.setOnClickListener(x -> onActionBtnClick());
@@ -72,6 +81,13 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
     @Override
     public void onResume() {
         super.onResume();
+        // Обновляем при возврате в раздел (например, после смены кода)
+        if (!mLoading) refreshAll();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         mHandler.postDelayed(mTicker, 60_000);
     }
 
@@ -90,12 +106,17 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
     }
 
     private void refreshAll() {
-        if (mLoading) return;
+        // Сбрасываем зависший флаг (если прошлое обновление упало)
+        if (mLoading) {
+            mLoading = false;
+        }
         mLoading = true;
+        setRefreshSpinning(true);
         final String code = getSubCode();
 
         if (code.isEmpty()) {
             mLoading = false;
+            setRefreshSpinning(false);
             mData.clear();
             mAdapter.notifyDataSetChanged();
             mEmpty.setVisibility(View.VISIBLE);
@@ -193,6 +214,7 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
                 }
 
                 mLoading = false;
+                setRefreshSpinning(false);
                 updateActionButton();
                 pingAll();
             });
