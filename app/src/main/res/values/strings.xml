@@ -41,8 +41,8 @@
 
     <string name="err_add_prof">Не удалось добавить %s</string>
     <string name="err_del_prof">Ошибка удаления %s</string>
-    <string name="notify_title">THEK VPN активирован</string>
+    <string name="notify_title">THEK Proxy активирован</string>
     <string name="notify_msg">Подключено к %s</string>
-    <string name="channel_name">THEK активен</string>
+    <string name="channel_name">THEK Proxy активен</string>
 
 </resources>

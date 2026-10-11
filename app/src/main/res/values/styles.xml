@@ -3,84 +3,89 @@
     <style name="AppTheme" parent="Theme.AppCompat">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
-        <item name="android:actionBarSize">40dp</item>
+        <item name="android:actionBarSize">0dp</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Activity</item>
     </style>
 
+    <!-- === THEK DARK (по умолчанию) === -->
     <style name="AppTheme.Dark" parent="AppTheme">
-        <item name="colorPrimary">#7A3FF7</item>
-        <item name="colorPrimaryDark">#0B0D12</item>
-        <item name="colorAccent">#7A3FF7</item>
-        <item name="android:colorAccent">#7A3FF7</item>
-        <item name="android:colorBackground">#0B0D12</item>
-        <item name="android:windowBackground">#0B0D12</item>
-        <item name="android:textColorPrimary">#FFFFFF</item>
-        <item name="android:textColorSecondary">#99FFFFFF</item>
-        <item name="android:statusBarColor">#0B0D12</item>
-        <item name="android:navigationBarColor">#0B0D12</item>
+        <item name="colorPrimary">@color/thek_primary</item>
+        <item name="colorPrimaryDark">@color/thek_bg_top</item>
+        <item name="colorAccent">@color/thek_primary</item>
+        <item name="android:colorAccent">@color/thek_primary</item>
+        <item name="android:colorBackground">@color/thek_bg_top</item>
+        <item name="android:windowBackground">@color/thek_bg_top</item>
+        <item name="android:textColorPrimary">@color/thek_text</item>
+        <item name="android:textColorSecondary">@color/thek_text_secondary</item>
+        <item name="android:textColorHint">@color/thek_text_muted</item>
+        <item name="android:statusBarColor">@color/thek_bg_top</item>
+        <item name="android:navigationBarColor">@color/thek_bg_top</item>
+        <item name="android:windowLightStatusBar">false</item>
+        
+        <!-- Диалоги -->
+        <item name="android:alertDialogTheme">@style/ThekDialog</item>
+        <item name="alertDialogTheme">@style/ThekDialog</item>
+        
+        <!-- Кнопки -->
+        <item name="android:buttonStyle">@style/ThekButton</item>
+        
+        <!-- EditText -->
+        <item name="editTextStyle">@style/ThekEditText</item>
     </style>
 
+    <!-- === Диалог в стиле THEK === -->
+    <style name="ThekDialog" parent="Theme.AppCompat.Dialog.Alert">
+        <item name="colorAccent">@color/thek_primary</item>
+        <item name="android:windowBackground">@drawable/bg_dialog</item>
+        <item name="android:textColorPrimary">@color/thek_text</item>
+        <item name="android:textColorSecondary">@color/thek_text_secondary</item>
+        <item name="buttonBarPositiveButtonStyle">@style/ThekDialogButton</item>
+        <item name="buttonBarNegativeButtonStyle">@style/ThekDialogButton</item>
+        <item name="buttonBarNeutralButtonStyle">@style/ThekDialogButton</item>
+    </style>
+
+    <style name="ThekDialogButton" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:textColor">@color/thek_primary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- === Кнопка === -->
+    <style name="ThekButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/bg_btn_primary</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingEnd">24dp</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <!-- === EditText === -->
+    <style name="ThekEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/thek_text</item>
+        <item name="android:textColorHint">@color/thek_text_muted</item>
+        <item name="android:backgroundTint">@color/thek_primary</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+    </style>
+
+    <!-- === Другие темы (оставляем для совместимости) === -->
     <style name="AppTheme.Light" parent="AppTheme">
-        <item name="colorPrimary">#6200EE</item>
-        <item name="colorPrimaryDark">#3700B3</item>
-        <item name="colorAccent">#6200EE</item>
-        <item name="android:colorAccent">#6200EE</item>
-        <item name="android:colorBackground">#F5F5F7</item>
-        <item name="android:windowBackground">#F5F5F7</item>
-        <item name="android:textColorPrimary">#111111</item>
+        <item name="colorPrimary">@color/light_primary</item>
+        <item name="colorPrimaryDark">@color/light_primary_dark</item>
+        <item name="colorAccent">@color/light_primary</item>
+        <item name="android:colorAccent">@color/light_primary</item>
+        <item name="android:colorBackground">@color/light_background</item>
+        <item name="android:windowBackground">@color/light_background</item>
+        <item name="android:textColorPrimary">@color/light_text_primary</item>
         <item name="android:textColorSecondary">#66000000</item>
-        <item name="android:statusBarColor">#F5F5F7</item>
-        <item name="android:navigationBarColor">#FFFFFF</item>
+        <item name="android:statusBarColor">@color/light_background</item>
     </style>
 
-    <style name="AppTheme.Purple" parent="AppTheme">
-        <item name="colorPrimary">#A26BFF</item>
-        <item name="colorPrimaryDark">#1A0F2E</item>
-        <item name="colorAccent">#A26BFF</item>
-        <item name="android:colorAccent">#A26BFF</item>
-        <item name="android:colorBackground">#1A0F2E</item>
-        <item name="android:windowBackground">#1A0F2E</item>
-        <item name="android:textColorPrimary">#FFFFFF</item>
-        <item name="android:textColorSecondary">#AAFFFFFF</item>
-        <item name="android:statusBarColor">#1A0F2E</item>
-        <item name="android:navigationBarColor">#1A0F2E</item>
-    </style>
-
-    <style name="AppTheme.Pink" parent="AppTheme">
-        <item name="colorPrimary">#FF3F87</item>
-        <item name="colorPrimaryDark">#2A0F1A</item>
-        <item name="colorAccent">#FF3F87</item>
-        <item name="android:colorAccent">#FF3F87</item>
-        <item name="android:colorBackground">#2A0F1A</item>
-        <item name="android:windowBackground">#2A0F1A</item>
-        <item name="android:textColorPrimary">#FFFFFF</item>
-        <item name="android:textColorSecondary">#AAFFFFFF</item>
-        <item name="android:statusBarColor">#2A0F1A</item>
-        <item name="android:navigationBarColor">#2A0F1A</item>
-    </style>
-
-    <style name="AppTheme.Turquoise" parent="AppTheme">
-        <item name="colorPrimary">#3FFFD1</item>
-        <item name="colorPrimaryDark">#0F2A2A</item>
-        <item name="colorAccent">#3FFFD1</item>
-        <item name="android:colorAccent">#3FFFD1</item>
-        <item name="android:colorBackground">#0F2A2A</item>
-        <item name="android:windowBackground">#0F2A2A</item>
-        <item name="android:textColorPrimary">#FFFFFF</item>
-        <item name="android:textColorSecondary">#AAFFFFFF</item>
-        <item name="android:statusBarColor">#0F2A2A</item>
-        <item name="android:navigationBarColor">#0F2A2A</item>
-    </style>
-
-    <style name="AppTheme.Orange" parent="AppTheme">
-        <item name="colorPrimary">#FF8C3F</item>
-        <item name="colorPrimaryDark">#2A1A0F</item>
-        <item name="colorAccent">#FF8C3F</item>
-        <item name="android:colorAccent">#FF8C3F</item>
-        <item name="android:colorBackground">#2A1A0F</item>
-        <item name="android:windowBackground">#2A1A0F</item>
-        <item name="android:textColorPrimary">#FFFFFF</item>
-        <item name="android:textColorSecondary">#AAFFFFFF</item>
-        <item name="android:statusBarColor">#2A1A0F</item>
-        <item name="android:navigationBarColor">#2A1A0F</item>
-    </style>
+    <style name="AppTheme.Purple" parent="AppTheme.Dark" />
+    <style name="AppTheme.Pink" parent="AppTheme.Dark" />
+    <style name="AppTheme.Turquoise" parent="AppTheme.Dark" />
+    <style name="AppTheme.Orange" parent="AppTheme.Dark" />
 </resources>

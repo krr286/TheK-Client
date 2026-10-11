@@ -1,44 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- DARK -->
-    <color name="dark_primary">#7A3FF7</color>
-    <color name="dark_background">#0B0D12</color>
-    <color name="dark_surface">#14161C</color>
-    <color name="dark_text_primary">#FFFFFF</color>
-    <color name="dark_text_secondary">#99FFFFFF</color>
+    <!-- === THEK NEW PALETTE === -->
+    
+    <!-- Primary — фиолетово-синий градиент -->
+    <color name="thek_primary">#7C5CFF</color>
+    <color name="thek_primary_dark">#5B3FE0</color>
+    <color name="thek_primary_light">#A78BFA</color>
+    <color name="thek_secondary">#3B82F6</color>
+    <color name="thek_secondary_dark">#1D4ED8</color>
+    <color name="thek_accent">#22D3EE</color>
+    
+    <!-- Backgrounds -->
+    <color name="thek_bg_top">#0A0E1A</color>
+    <color name="thek_bg_bottom">#131A2C</color>
+    <color name="thek_surface">#161B2E</color>
+    <color name="thek_surface_elevated">#1E2540</color>
+    <color name="thek_surface_glass">#26FFFFFF</color>
+    <color name="thek_border">#1FFFFFFF</color>
+    <color name="thek_border_active">#7C5CFF</color>
+    
+    <!-- Text -->
+    <color name="thek_text">#F5F7FB</color>
+    <color name="thek_text_secondary">#A0A8BF</color>
+    <color name="thek_text_muted">#6B7290</color>
+    
+    <!-- Status -->
+    <color name="thek_success">#22C55E</color>
+    <color name="thek_warning">#F59E0B</color>
+    <color name="thek_danger">#EF4444</color>
+    <color name="thek_danger_soft">#F87171</color>
+    
+    <!-- Legacy mappings (для совместимости) -->
+    <color name="dark_primary">#7C5CFF</color>
+    <color name="dark_background">#0A0E1A</color>
+    <color name="dark_surface">#161B2E</color>
+    <color name="dark_text_primary">#F5F7FB</color>
+    <color name="dark_text_secondary">#A0A8BF</color>
 
-    <!-- LIGHT -->
+    <!-- Theme colors для других тем -->
     <color name="light_primary">#6200EE</color>
     <color name="light_primary_dark">#3700B3</color>
     <color name="light_background">#FFFFFF</color>
     <color name="light_text_primary">#000000</color>
 
-    <!-- PURPLE -->
     <color name="purple_primary">#A26BFF</color>
     <color name="purple_primary_dark">#6A2FBF</color>
     <color name="purple_background">#1A0F2E</color>
     <color name="purple_text_primary">#FFFFFF</color>
 
-    <!-- PINK -->
     <color name="pink_primary">#FF3F87</color>
     <color name="pink_primary_dark">#B02461</color>
     <color name="pink_background">#2A0F1A</color>
     <color name="pink_text_primary">#FFFFFF</color>
 
-    <!-- TURQUOISE -->
     <color name="turquoise_primary">#3FFFD1</color>
     <color name="turquoise_primary_dark">#1FA088</color>
     <color name="turquoise_background">#0F2A2A</color>
     <color name="turquoise_text_primary">#FFFFFF</color>
 
-    <!-- ORANGE -->
     <color name="orange_primary">#FF8C3F</color>
     <color name="orange_primary_dark">#B05A20</color>
     <color name="orange_background">#2A1A0F</color>
     <color name="orange_text_primary">#FFFFFF</color>
 
-    <!-- Общие -->
     <color name="accent_green">#4CAF50</color>
     <color name="accent_orange">#FF9800</color>
 </resources>
