@@ -374,7 +374,7 @@ public class HomeFragment extends Fragment implements ServerAdapter.Listener {
             if (host == null || host.isEmpty()) continue;
 
             try {
-                if (!mManager.hasProfile(name)) mManager.addProfile(name);
+                if (mManager.getProfile(name) == null) mManager.addProfile(name);
             } catch (Exception ignored) {
                 try { mManager.addProfile(name); } catch (Exception ignored2) {}
             }
