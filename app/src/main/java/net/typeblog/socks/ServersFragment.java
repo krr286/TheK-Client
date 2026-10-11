@@ -369,7 +369,7 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
         }
         for (ServerItem s : mData) {
             if (s.type == ServerItem.TYPE_MTPROTO) {
-                onMtprotoClick(s);
+                onMtprotoOpen(s);
                 return;
             }
         }
@@ -443,7 +443,7 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
 
 
     @Override
-    public void onMtprotoClick(ServerItem it) {
+    public void onMtprotoOpen(ServerItem it) {
         if (it.mtprotoLink == null || it.mtprotoLink.isEmpty()) {
             android.widget.Toast.makeText(getActivity(),
                 "Ссылка недоступна",
