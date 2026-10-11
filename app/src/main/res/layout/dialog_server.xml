@@ -7,14 +7,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="24dp"
+        android:background="@drawable/bg_dialog">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Новый сервер"
+            android:textColor="#F5F7FB"
+            android:textSize="20sp"
+            android:fontFamily="sans-serif-medium"
+            android:paddingBottom="20dp" />
 
         <EditText
             android:id="@+id/dlg_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Название (напр. Египет #1)"
+            android:textColor="#F5F7FB"
+            android:textColorHint="#6B7290"
             android:inputType="text"
+            android:backgroundTint="#7C5CFF"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
             android:singleLine="true" />
 
         <EditText
@@ -23,7 +38,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:hint="IP или домен сервера"
+            android:textColor="#F5F7FB"
+            android:textColorHint="#6B7290"
             android:inputType="textUri"
+            android:backgroundTint="#7C5CFF"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
             android:singleLine="true" />
 
         <EditText
@@ -32,7 +52,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:hint="Порт (1080, 8000)"
+            android:textColor="#F5F7FB"
+            android:textColorHint="#6B7290"
             android:inputType="number"
+            android:backgroundTint="#7C5CFF"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
             android:singleLine="true" />
 
         <EditText
@@ -41,7 +66,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:hint="Логин (опционально)"
+            android:textColor="#F5F7FB"
+            android:textColorHint="#6B7290"
             android:inputType="text"
+            android:backgroundTint="#7C5CFF"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
             android:singleLine="true" />
 
         <EditText
@@ -50,7 +80,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:hint="Пароль (опционально)"
+            android:textColor="#F5F7FB"
+            android:textColorHint="#6B7290"
             android:inputType="textPassword"
+            android:backgroundTint="#7C5CFF"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
             android:singleLine="true" />
 
     </LinearLayout>

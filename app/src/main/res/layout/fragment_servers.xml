@@ -4,12 +4,6 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/bg_pattern"
-        android:scaleType="centerCrop" />
-
     <ImageButton
         android:id="@+id/btn_refresh_servers"
         android:layout_width="44dp"
@@ -20,13 +14,14 @@
         android:padding="10dp"
         android:background="?android:attr/selectableItemBackgroundBorderless"
         android:src="@drawable/ic_refresh"
+        android:tint="#7C5CFF"
         android:contentDescription="Обновить" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/servers_rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="12dp"
+        android:paddingTop="64dp"
         android:paddingBottom="90dp"
         android:clipToPadding="false" />
 
@@ -35,8 +30,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Введи код подписки в разделе «Главная»\nи серверы появятся здесь"
-        android:textColor="?android:textColorSecondary"
+        android:text="Введи код подписки в разделе «Главная»&#10;и серверы появятся здесь"
+        android:textColor="#A0A8BF"
         android:textSize="14sp"
         android:gravity="center"
         android:visibility="gone" />
@@ -50,9 +45,9 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:text="Подключить"
-        android:textColor="#FFFFFFFF"
+        android:textColor="#FFFFFF"
         android:textSize="16sp"
-        android:textStyle="bold"
+        android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:background="@drawable/bg_btn_telegram"
         android:visibility="gone" />

@@ -4,41 +4,22 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
 
-    <ImageView
-        android:id="@+id/home_pattern"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/bg_pattern"
-        android:scaleType="centerCrop" />
-
-    <ImageView
-        android:id="@+id/home_bg"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/home_bg_placeholder"
-        android:scaleType="centerCrop"
-        android:alpha="0.4" />
-
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:src="@drawable/home_pattern"
-        android:scaleType="centerCrop" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="12dp">
-<FrameLayout
+        android:orientation="vertical">
+
+        <!-- Блок кнопки -->
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:minHeight="360dp">
 
             <FrameLayout
                 android:id="@+id/connect_button"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="220dp"
+                android:layout_height="220dp"
                 android:layout_gravity="center"
                 android:background="@drawable/bg_connect_button"
                 android:clickable="true"
@@ -46,54 +27,90 @@
 
                 <ImageView
                     android:id="@+id/connect_icon"
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_power_circle_big"
-                    android:tint="?android:textColorPrimary" />
+                    android:tint="#F5F7FB" />
             </FrameLayout>
 
-            <TextView
-                android:id="@+id/home_status"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginBottom="50dp"
-                android:text="НЕ ЗАЩИЩЕНО"
-                android:textColor="#FF3F3F"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.1" />
+                android:layout_gravity="bottom"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:paddingBottom="24dp">
 
-            <TextView
-                android:id="@+id/current_server"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom|center_horizontal"
-                android:layout_marginBottom="20dp"
-                android:text=""
-                android:textColor="?android:textColorSecondary"
-                android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/home_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="НЕ ЗАЩИЩЕНО"
+                    android:textColor="#EF4444"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.15" />
+
+                <TextView
+                    android:id="@+id/current_server"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:text=""
+                    android:textColor="#A0A8BF"
+                    android:textSize="12sp" />
+            </LinearLayout>
         </FrameLayout>
 
-        <TextView
+        <!-- Раздел серверов -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="СЕРВЕРА"
-            android:textColor="?android:textColorSecondary"
-            android:textSize="11sp"
-            android:letterSpacing="0.25"
-            android:paddingStart="20dp"
-            android:paddingBottom="8dp" />
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingBottom="10dp">
+
+            <View
+                android:layout_width="20dp"
+                android:layout_height="2dp"
+                android:background="#7C5CFF"
+                android:layout_marginEnd="10dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="СЕРВЕРА"
+                android:textColor="#A0A8BF"
+                android:textSize="11sp"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="0.25" />
+
+            <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/home_refresh"
+                android:layout_width="26dp"
+                android:layout_height="26dp"
+                android:src="@drawable/ic_refresh"
+                android:tint="#7C5CFF"
+                android:padding="4dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackgroundBorderless" />
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/servers_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:maxHeight="240dp"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"
-            android:paddingBottom="12dp"
+            android:maxHeight="280dp"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="14dp"
             android:clipToPadding="false" />
 
     </LinearLayout>
