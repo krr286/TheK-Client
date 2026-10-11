@@ -467,4 +467,20 @@ public class HomeFragment extends Fragment implements ServerAdapter.Listener {
         return (int) (dp * getResources().getDisplayMetrics().density);
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        try {
+            android.content.SharedPreferences sp = getActivity().getSharedPreferences("thek_prefs", 0);
+            String pending = sp.getString("pending_code", "");
+            if (pending != null && !pending.isEmpty()) {
+                sp.edit().remove("pending_code").apply();
+                final String _code = pending.trim().toUpperCase();
+                new android.os.Handler(android.os.Looper.getMainLooper())
+                    .postDelayed(() -> verifyCode(_code), 400);
+            }
+        } catch (Exception ignored) {}
+    }
+
 }

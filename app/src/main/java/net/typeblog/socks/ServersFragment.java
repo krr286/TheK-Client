@@ -161,6 +161,8 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
                             it.pass = o.optString("pass", "");
                             it.loadCur = o.optInt("load_cur", 0);
                             it.loadMax = o.optInt("load_max", 10);
+                            // Пропускаем скрытые серверы
+                            if (isHidden(it.host + ":" + it.port)) continue;
                             socksList.add(it);
                         }
                     }

@@ -62,6 +62,51 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             selectItem(R.id.nav_home);
         }
+
+        handleDeepLink(getIntent());
+    }
+
+    @Override
+    protected void onNewIntent(android.content.Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleDeepLink(intent);
+    }
+
+    private void handleDeepLink(android.content.Intent intent) {
+        if (intent == null) return;
+        android.net.Uri data = intent.getData();
+        if (data == null) return;
+        if (!"thek".equals(data.getScheme())) return;
+
+        String code = null;
+        // thek://code/FUJ4NW  →  host="code", path="FUJ4NW"
+        if ("code".equals(data.getHost())) {
+            code = data.getLastPathSegment();
+        } else if (data.getLastPathSegment() != null) {
+            // thek://FUJ4NW
+            code = data.getLastPathSegment();
+        }
+        if (code == null || code.isEmpty()) return;
+
+        code = code.trim().toUpperCase();
+
+        // Сохраняем код + флаг что нужно применить
+        android.content.SharedPreferences sp = getSharedPreferences("thek_prefs", 0);
+        sp.edit()
+          .putString("sub_token", code)
+          .putString("code", code)
+          .putString("user_code", code)
+          .putString("pending_code", code)
+          .apply();
+
+        android.widget.Toast.makeText(this,
+            "Код загружен: " + code,
+            android.widget.Toast.LENGTH_LONG).show();
+
+        if (mCurrentNav != R.id.nav_home) {
+            selectItem(R.id.nav_home);
+        }
     }
 
     @Override
