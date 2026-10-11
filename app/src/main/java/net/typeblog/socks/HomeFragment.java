@@ -484,12 +484,6 @@ public class HomeFragment extends Fragment implements ServerAdapter.Listener {
     }
 
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        checkAutoConnect();
-    }
-
     private void checkAutoConnect() {
         android.content.SharedPreferences prefs =
             getActivity().getSharedPreferences("thek_prefs", 0);
