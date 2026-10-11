@@ -170,22 +170,4 @@
             android:paddingBottom="20dp"
             android:letterSpacing="0.25" />
     </LinearLayout>
-
-    <!-- Декор для drawer (звёзды) -->
-    <FrameLayout
-        android:layout_width="290dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:clickable="false"
-        android:focusable="false"
-        android:importantForAccessibility="no">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@drawable/bg_decor"
-            android:scaleType="centerCrop"
-            android:alpha="0.6"
-            android:importantForAccessibility="no" />
-    </FrameLayout>
-
 </androidx.drawerlayout.widget.DrawerLayout>
