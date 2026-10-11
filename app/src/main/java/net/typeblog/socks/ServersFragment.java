@@ -16,14 +16,12 @@ import android.widget.Toast;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import net.typeblog.socks.util.Profile;
 import net.typeblog.socks.util.ProfileManager;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.net.HttpURLConnection;
-import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,12 +45,13 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
         mRv = v.findViewById(R.id.servers_rv);
         mEmpty = v.findViewById(R.id.servers_empty);
         mActionBtn = v.findViewById(R.id.servers_action_btn);
-        if (mActionBtn != null) {
-            mActionBtn.setOnClickListener(x -> onActionBtnClick());
-        }
 
         android.widget.ImageButton btnRefresh = v.findViewById(R.id.btn_refresh_servers);
         if (btnRefresh != null) btnRefresh.setOnClickListener(x -> refreshAll());
+
+        if (mActionBtn != null) {
+            mActionBtn.setOnClickListener(x -> onActionBtnClick());
+        }
 
         mRv.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter = new ServerUnifiedAdapter(mData, this);
@@ -101,6 +100,7 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
             mAdapter.notifyDataSetChanged();
             mEmpty.setVisibility(View.VISIBLE);
             mRv.setVisibility(View.GONE);
+            if (mActionBtn != null) mActionBtn.setVisibility(View.GONE);
             mEmpty.setText("Введи код подписки в разделе «Главная»\nи серверы появятся здесь");
             return;
         }
@@ -115,29 +115,31 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
                 } else if (!resp.optBoolean("valid", false)) {
                     err = "Код недействителен";
                 } else {
-                    // ===== MTProto =====
+                    // ============ MTProto ============
                     JSONArray mt = resp.optJSONArray("mtproto");
-                    boolean hasMtproto = false;
-                    if (mt != null) {
+                    if (mt != null && mt.length() > 0) {
+                        ServerItem head = new ServerItem(ServerItem.TYPE_HEADER);
+                        head.name = "Telegram \u00B7 MTProto";
+                        list.add(head);
+
                         for (int i = 0; i < mt.length(); i++) {
                             JSONObject o = mt.getJSONObject(i);
                             ServerItem it = new ServerItem(ServerItem.TYPE_MTPROTO);
-                            it.name = "Telegram";
+                            it.name = o.optString("name", "Telegram");
+                            it.flag = o.optString("flag", "\u2708\uFE0F");
                             it.host = o.optString("server", "");
                             it.port = o.optInt("port", 8443);
                             it.mtprotoLink = o.optString("link", "");
                             it.expiresAt = o.optString("expires_at", "");
                             it.loadCur = o.optInt("load_cur", 0);
                             it.loadMax = o.optInt("load_max", 10);
-                            it.serverUsed = o.optInt("server_used", 0);
-                            it.serverTotal = o.optInt("server_total", 0);
                             list.add(it);
-                            hasMtproto = true;
                         }
                     }
 
-                    // ===== SOCKS5 =====
+                    // ============ SOCKS5 ============
                     JSONArray socks = resp.optJSONArray("servers");
+                    List<ServerItem> socksList = new ArrayList<>();
                     if (socks != null) {
                         for (int i = 0; i < socks.length(); i++) {
                             Object raw = socks.get(i);
@@ -151,9 +153,19 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
                             it.pass = o.optString("pass", "");
                             it.loadCur = o.optInt("load_cur", 0);
                             it.loadMax = o.optInt("load_max", 10);
-                            if (hasMtproto && i == 0) {
-                                it.showDivider = true;
-                            }
+                            socksList.add(it);
+                        }
+                    }
+
+                    if (!socksList.isEmpty()) {
+                        ServerItem head = new ServerItem(ServerItem.TYPE_HEADER);
+                        head.name = "Сетевые прокси \u00B7 SOCKS5";
+                        list.add(head);
+
+                        // Отмечаем выбранный
+                        String defName = mManager.getDefault().getName();
+                        for (ServerItem it : socksList) {
+                            if (it.name.equals(defName)) it.selected = true;
                             list.add(it);
                         }
                     }
@@ -169,14 +181,6 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
             getActivity().runOnUiThread(() -> {
                 mData.clear();
                 mData.addAll(fl);
-
-                String defName = mManager.getDefault().getName();
-                for (ServerItem it : mData) {
-                    if (it.type == ServerItem.TYPE_SOCKS && it.name.equals(defName)) {
-                        it.selected = true;
-                    }
-                }
-
                 mAdapter.notifyDataSetChanged();
 
                 if (mData.isEmpty()) {
@@ -197,7 +201,7 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
 
     private void pingAll() {
         for (final ServerItem it : new ArrayList<>(mData)) {
-            if (it.showDivider) continue;
+            if (it.type == ServerItem.TYPE_HEADER) continue;
             if (it.host == null || it.host.isEmpty()) continue;
             new Thread(() -> {
                 final int ms = pingHost(it.host, it.port);
@@ -225,7 +229,7 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
         } catch (Exception e) {
             try {
                 long start = java.lang.System.currentTimeMillis();
-                Socket s = new Socket();
+                java.net.Socket s = new java.net.Socket();
                 s.connect(new java.net.InetSocketAddress(host, port), 2500);
                 s.close();
                 return (int) (java.lang.System.currentTimeMillis() - start);
@@ -235,39 +239,57 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
         }
     }
 
-    @Override
-    public void onSelect(ServerItem it) {
-        try {
-            Profile p = mManager.getProfile(it.name);
-            if (p == null) {
-                p = mManager.addProfile(it.name);
-            }
-            if (p == null) return;
-            p.setServer(it.host);
-            p.setPort(it.port);
-            p.setIsUserpw(it.user != null && !it.user.isEmpty());
-            p.setUsername(it.user == null ? "" : it.user);
-            p.setPassword(it.pass == null ? "" : it.pass);
-            mManager.switchDefault(it.name);
-            Toast.makeText(getActivity(), "Выбран: " + it.name, Toast.LENGTH_SHORT).show();
-            updateActionButton();
-            // Обновляем галочки
-            for (ServerItem s : mData) {
-                s.selected = s.name.equals(it.name) && s.type == ServerItem.TYPE_SOCKS;
-            }
-            mAdapter.notifyDataSetChanged();
-        } catch (Exception e) {
-            Toast.makeText(getActivity(), "Ошибка: " + e.getMessage(), Toast.LENGTH_LONG).show();
+    private void updateActionButton() {
+        if (mActionBtn == null) return;
+        ServerItem selected = null;
+        for (ServerItem s : mData) {
+            if (s.selected && s.type == ServerItem.TYPE_SOCKS) { selected = s; break; }
+        }
+        if (selected != null) {
+            mActionBtn.setVisibility(View.VISIBLE);
+            mActionBtn.setText("\uD83D\uDD0C Подключить: " + selected.name);
+        } else {
+            mActionBtn.setVisibility(View.GONE);
         }
     }
 
     @Override
-    public void onLongClick(ServerItem it) {
-        Toast.makeText(getActivity(), "Долгое нажатие: " + it.name, Toast.LENGTH_SHORT).show();
+    public void onSelect(ServerItem it) {
+        if (it.type == ServerItem.TYPE_HEADER) return;
+        if (it.type != ServerItem.TYPE_SOCKS) return;
+
+        for (ServerItem s : mData) {
+            if (s.type == ServerItem.TYPE_SOCKS) s.selected = false;
+        }
+        it.selected = true;
+        mAdapter.notifyDataSetChanged();
+        updateActionButton();
+
+        try {
+            if (mManager.getProfile(it.name) == null) {
+                mManager.addProfile(it.name);
+            }
+            net.typeblog.socks.util.Profile p = mManager.getProfile(it.name);
+            if (p != null) {
+                p.setServer(it.host);
+                p.setPort(it.port);
+                p.setIsUserpw(it.user != null && !it.user.isEmpty());
+                p.setUsername(it.user == null ? "" : it.user);
+                p.setPassword(it.pass == null ? "" : it.pass);
+                p.setRoute("all");
+                p.setDns("8.8.8.8");
+                p.setDnsPort(53);
+                p.setHasIPv6(false);
+                p.setUDPGW("77.239.101.146:7300");
+                mManager.switchDefault(it.name);
+            }
+        } catch (Exception e) {
+            android.util.Log.e("THEK_SEL", "save: " + e.getMessage());
+        }
     }
 
     @Override
-    public void onMtprotoClick(ServerItem it) {
+    public void onMtprotoOpen(ServerItem it) {
         if (it.mtprotoLink == null || it.mtprotoLink.isEmpty()) {
             Toast.makeText(getActivity(), "Ссылка недоступна", Toast.LENGTH_SHORT).show();
             return;
@@ -287,25 +309,9 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
         }
     }
 
-    private void updateActionButton() {
-        if (mActionBtn == null) return;
-        ServerItem selected = null;
-        for (ServerItem s : mData) {
-            if (s.selected && s.type == ServerItem.TYPE_SOCKS) { selected = s; break; }
-        }
-        boolean hasMt = false;
-        for (ServerItem s : mData) {
-            if (s.type == ServerItem.TYPE_MTPROTO) { hasMt = true; break; }
-        }
-        if (selected != null) {
-            mActionBtn.setVisibility(View.VISIBLE);
-            mActionBtn.setText("\uD83D\uDD0C Подключить: " + selected.name);
-        } else if (hasMt) {
-            mActionBtn.setVisibility(View.VISIBLE);
-            mActionBtn.setText("\u2708\uFE0F Открыть Telegram");
-        } else {
-            mActionBtn.setVisibility(View.GONE);
-        }
+    @Override
+    public void onLongClick(ServerItem it) {
+        // не используется пока
     }
 
     private void onActionBtnClick() {
@@ -313,26 +319,17 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
         for (ServerItem s : mData) {
             if (s.selected && s.type == ServerItem.TYPE_SOCKS) { selected = s; break; }
         }
-        if (selected != null) {
-            // Запускаем VPN на выбранном SOCKS5
-            android.widget.Toast.makeText(getActivity(), "Подключаю: " + selected.name, android.widget.Toast.LENGTH_SHORT).show();
-            // Переключаемся на главную и запускаем VPN
-            try {
-                android.content.Intent i = new android.content.Intent(getActivity(), MainActivity.class);
-                i.putExtra("auto_connect", true);
-                startActivity(i);
-            } catch (Exception e) {
-                android.widget.Toast.makeText(getActivity(), "Ошибка: " + e.getMessage(), android.widget.Toast.LENGTH_LONG).show();
-            }
+        if (selected == null) {
+            Toast.makeText(getActivity(), "Выбери сервер", Toast.LENGTH_SHORT).show();
             return;
         }
-        // Если SOCKS5 не выбран, но есть MTProto — открываем Telegram
-        for (ServerItem s : mData) {
-            if (s.type == ServerItem.TYPE_MTPROTO) {
-                onMtprotoClick(s);
-                return;
-            }
+        try {
+            Intent i = new Intent(getActivity(), MainActivity.class);
+            i.putExtra("auto_connect", true);
+            startActivity(i);
+            Toast.makeText(getActivity(), "Подключаю: " + selected.name, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Toast.makeText(getActivity(), "Ошибка: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
-
 }
