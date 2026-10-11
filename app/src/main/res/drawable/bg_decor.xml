@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="400dp"
+    android:height="800dp"
+    android:viewportWidth="400"
+    android:viewportHeight="800">
+
+    <!-- === ХАОС-ЛИНИИ (правый нижний угол — яркие) === -->
+
+    <!-- Яркие линии правый низ -->
+    <path
+        android:pathData="M260,560 L340,500 M280,620 L360,540 M300,680 L380,600 M240,700 L320,620"
+        android:strokeColor="#80FFFFFF"
+        android:strokeWidth="1.5"
+        android:strokeLineCap="round" />
+
+    <path
+        android:pathData="M320,440 Q360,480 340,540 Q320,600 370,640"
+        android:strokeColor="#60A78BFA"
+        android:strokeWidth="1.2"
+        android:fillColor="#00000000" />
+
+    <path
+        android:pathData="M290,520 L330,510 L340,530 L300,545 Z"
+        android:strokeColor="#50FFFFFF"
+        android:strokeWidth="1"
+        android:fillColor="#00000000" />
+
+    <!-- Средние линии центр-право -->
+    <path
+        android:pathData="M180,460 L260,420 M200,530 L280,470"
+        android:strokeColor="#40A78BFA"
+        android:strokeWidth="1"
+        android:strokeLineCap="round" />
+
+    <path
+        android:pathData="M220,600 Q250,580 280,600 Q300,620 280,640"
+        android:strokeColor="#3022D3EE"
+        android:strokeWidth="1"
+        android:fillColor="#00000000" />
+
+    <!-- Тусклые линии центр -->
+    <path
+        android:pathData="M120,400 L200,370 M140,470 L220,430"
+        android:strokeColor="#253B82F6"
+        android:strokeWidth="1"
+        android:strokeLineCap="round" />
+
+    <path
+        android:pathData="M100,560 L180,510"
+        android:strokeColor="#207C5CFF"
+        android:strokeWidth="1"
+        android:strokeLineCap="round" />
+
+    <!-- Едва заметные верх-лево -->
+    <path
+        android:pathData="M40,120 L100,90 M60,180 L120,150"
+        android:strokeColor="#10FFFFFF"
+        android:strokeWidth="0.8"
+        android:strokeLineCap="round" />
+
+    <path
+        android:pathData="M30,240 Q60,220 90,240"
+        android:strokeColor="#0C7C5CFF"
+        android:strokeWidth="0.8"
+        android:fillColor="#00000000" />
+
+    <!-- === ЗВЁЗДЫ (мелкие точки) — ярче справа-снизу === -->
+
+    <!-- Яркие звёзды (правый низ) -->
+    <path android:pathData="M350,520 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0" android:fillColor="#CCFFFFFF" />
+    <path android:pathData="M370,580 m-2.5,0 a2.5,2.5 0 1,0 5,0 a2.5,2.5 0 1,0 -5,0" android:fillColor="#B3A78BFA" />
+    <path android:pathData="M330,650 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0" android:fillColor="#AA22D3EE" />
+    <path android:pathData="M380,700 m-1.5,0 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0" android:fillColor="#99FFFFFF" />
+    <path android:pathData="M300,720 m-2,0 a2,2 0 1,0 4,0 a2,2 0 1,0 -4,0" android:fillColor="#B37C5CFF" />
+
+    <!-- Средние звёзды (центр-право) -->
+    <path android:pathData="M240,500 m-1.5,0 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0" android:fillColor="#70FFFFFF" />
+    <path android:pathData="M280,580 m-1.2,0 a1.2,1.2 0 1,0 2.4,0 a1.2,1.2 0 1,0 -2.4,0" android:fillColor="#603B82F6" />
+    <path android:pathData="M200,640 m-1.5,0 a1.5,1.5 0 1,0 3,0 a1.5,1.5 0 1,0 -3,0" android:fillColor="#55A78BFA" />
+
+    <!-- Тусклые звёзды (центр, слева) -->
+    <path android:pathData="M150,480 m-1,0 a1,1 0 1,0 2,0 a1,1 0 1,0 -2,0" android:fillColor="#40FFFFFF" />
+    <path android:pathData="M100,600 m-1,0 a1,1 0 1,0 2,0 a1,1 0 1,0 -2,0" android:fillColor="#303B82F6" />
+    <path android:pathData="M180,720 m-1.2,0 a1.2,1.2 0 1,0 2.4,0 a1.2,1.2 0 1,0 -2.4,0" android:fillColor="#357C5CFF" />
+
+    <!-- Очень тусклые (верх, левый угол) -->
+    <path android:pathData="M80,180 m-1,0 a1,1 0 1,0 2,0 a1,1 0 1,0 -2,0" android:fillColor="#20FFFFFF" />
+    <path android:pathData="M50,300 m-1,0 a1,1 0 1,0 2,0 a1,1 0 1,0 -2,0" android:fillColor="#18A78BFA" />
+    <path android:pathData="M120,80 m-1.2,0 a1.2,1.2 0 1,0 2.4,0 a1.2,1.2 0 1,0 -2.4,0" android:fillColor="#15FFFFFF" />
+
+</vector>

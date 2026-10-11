@@ -4,12 +4,7 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Градиентный фон -->
     <path
         android:pathData="M0,0 L108,0 L108,108 L0,108 Z"
         android:fillColor="#0F1422" />
-    <!-- Свечение сверху -->
-    <path
-        android:pathData="M54,10 m-60,0 a60,60 0 1,0 120,0 a60,60 0 1,0 -120,0"
-        android:fillColor="#307C5CFF" />
 </vector>

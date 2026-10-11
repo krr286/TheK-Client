@@ -1,36 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- База -->
+
+    <!-- База — очень тёмная -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#05070F" />
+        </shape>
+    </item>
+
+    <!-- Основной градиент: тёмный центр → синеватый низ -->
     <item>
         <shape android:shape="rectangle">
             <gradient
-                android:type="linear"
-                android:angle="270"
-                android:startColor="#0A0E1A"
-                android:centerColor="#0E1322"
-                android:endColor="#0A0E1A" />
+                android:type="radial"
+                android:gradientRadius="120%"
+                android:centerX="0.5"
+                android:centerY="0.35"
+                android:startColor="#00000000"
+                android:centerColor="#080C18"
+                android:endColor="#1A1F3A" />
         </shape>
     </item>
-    <!-- Верхнее свечение -->
-    <item android:gravity="top">
+
+    <!-- Свечение СНИЗУ — фиолетово-синее -->
+    <item android:gravity="bottom">
         <shape android:shape="oval">
-            <size android:width="600dp" android:height="600dp" />
+            <size android:width="800dp" android:height="500dp" />
+            <gradient
+                android:type="radial"
+                android:gradientRadius="450dp"
+                android:startColor="#4A7C5CFF"
+                android:centerColor="#255B3FE0"
+                android:endColor="#00000000" />
+        </shape>
+    </item>
+
+    <!-- Свечение слева по центру — мягкое синее -->
+    <item android:gravity="start|center_vertical">
+        <shape android:shape="oval">
+            <size android:width="400dp" android:height="700dp" />
             <gradient
                 android:type="radial"
                 android:gradientRadius="300dp"
-                android:startColor="#357C5CFF"
-                android:endColor="#007C5CFF" />
+                android:startColor="#303B82F6"
+                android:endColor="#00000000" />
         </shape>
     </item>
-    <!-- Нижнее свечение -->
-    <item android:gravity="bottom">
+
+    <!-- Свечение справа по центру — мягкое фиолетовое -->
+    <item android:gravity="end|center_vertical">
         <shape android:shape="oval">
-            <size android:width="500dp" android:height="500dp" />
+            <size android:width="400dp" android:height="700dp" />
             <gradient
                 android:type="radial"
-                android:gradientRadius="250dp"
-                android:startColor="#253B82F6"
-                android:endColor="#003B82F6" />
+                android:gradientRadius="300dp"
+                android:startColor="#307C5CFF"
+                android:endColor="#00000000" />
         </shape>
     </item>
+
 </layer-list>

@@ -4,23 +4,33 @@
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
 
+    <!-- Звёзды и хаос-линии -->
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_decor"
+        android:scaleType="centerCrop"
+        android:importantForAccessibility="no" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <!-- Блок с кнопкой (занимает больше места когда нет серверов) -->
         <FrameLayout
+            android:id="@+id/connect_block"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="24dp"
-            android:paddingBottom="16dp"
-            android:minHeight="300dp">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:minHeight="380dp">
 
             <FrameLayout
                 android:id="@+id/connect_button"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
-                android:layout_gravity="center_horizontal|top"
+                android:layout_gravity="center"
+                android:layout_marginTop="-30dp"
                 android:background="@drawable/bg_connect_button"
                 android:clickable="true"
                 android:focusable="true">
@@ -37,7 +47,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_marginBottom="20dp"
                 android:orientation="vertical"
                 android:gravity="center_horizontal">
 
@@ -63,6 +74,7 @@
             </LinearLayout>
         </FrameLayout>
 
+        <!-- Раздел серверов -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,6 +82,7 @@
             android:gravity="center_vertical"
             android:paddingStart="24dp"
             android:paddingEnd="24dp"
+            android:paddingTop="20dp"
             android:paddingBottom="10dp">
 
             <View
@@ -101,13 +114,32 @@
                 android:background="?android:attr/selectableItemBackgroundBorderless" />
         </LinearLayout>
 
+        <!-- Список серверов — maxHeight чтобы не растягивался если пусто -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/servers_list"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:maxHeight="280dp"
             android:paddingBottom="14dp"
             android:clipToPadding="false" />
+
+        <TextView
+            android:id="@+id/empty_servers_hint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Введи код подписки через ➕ сверху"
+            android:textColor="#6B7290"
+            android:textSize="13sp"
+            android:gravity="center"
+            android:paddingTop="40dp"
+            android:paddingBottom="20dp"
+            android:visibility="gone" />
+
+        <!-- Пустое место внизу если серверов нет -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
     </LinearLayout>
 </FrameLayout>
