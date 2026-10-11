@@ -66,11 +66,6 @@ public class HomeFragment extends Fragment implements ServerAdapter.Listener {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         mManager = new ProfileManager(getActivity().getApplicationContext());
 
-        android.widget.ImageView homeBg = v.findViewById(R.id.home_bg);
-        if (homeBg != null) {
-            android.graphics.Bitmap bm = RemoteAssets.getBitmap(getActivity(), "home");
-            if (bm != null) { homeBg.setImageBitmap(bm); homeBg.setAlpha(0.55f); }
-        }
 
         mConnectBtn = v.findViewById(R.id.connect_button);
 
@@ -80,24 +75,11 @@ public class HomeFragment extends Fragment implements ServerAdapter.Listener {
         mCurrentServer = v.findViewById(R.id.current_server);
         mList = v.findViewById(R.id.servers_list);
 
-        // Программно добавляем кнопку «Обновить» над списком серверов
-        try {
-            android.view.ViewGroup parent = (android.view.ViewGroup) mList.getParent();
-            int idx = parent.indexOfChild(mList);
-            android.widget.ImageButton btnRefresh = new android.widget.ImageButton(getActivity());
-            btnRefresh.setImageResource(R.drawable.ic_refresh);
-            btnRefresh.setBackgroundResource(android.R.drawable.btn_default);
-            btnRefresh.setBackgroundColor(0x00000000);
-            android.widget.LinearLayout.LayoutParams lp =
-                new android.widget.LinearLayout.LayoutParams(dp(32), dp(32));
-            lp.gravity = android.view.Gravity.END;
-            lp.rightMargin = dp(16);
-            btnRefresh.setLayoutParams(lp);
-            btnRefresh.setPadding(dp(4), dp(4), dp(4), dp(4));
-            btnRefresh.setOnClickListener(x -> doRefresh());
-            parent.addView(btnRefresh, idx);
-        } catch (Exception ignored) {}
-
+        // Кнопка обновления (из нового layout)
+        android.widget.ImageView homeRefresh = v.findViewById(R.id.home_refresh);
+        if (homeRefresh != null) {
+            homeRefresh.setOnClickListener(x -> loadProfiles());
+        }
         mList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter = new ServerAdapter(mProfiles, this);
         mList.setAdapter(mAdapter);
