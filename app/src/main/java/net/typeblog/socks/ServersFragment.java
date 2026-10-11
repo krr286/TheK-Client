@@ -47,7 +47,7 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
         mEmpty = v.findViewById(R.id.servers_empty);
         mActionBtn = v.findViewById(R.id.servers_action_btn);
 
-        mRefreshBtn = v.findViewById(R.id.btn_refresh_servers);
+
         if (mRefreshBtn != null) {
             mRefreshBtn.setOnClickListener(x -> {
                 if (mLoading) {
