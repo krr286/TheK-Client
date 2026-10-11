@@ -79,19 +79,6 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        // Обновляем при возврате в раздел (например, после смены кода)
-        if (!mLoading) refreshAll();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mHandler.postDelayed(mTicker, 60_000);
-    }
-
-    @Override
     public void onPause() {
         super.onPause();
         mHandler.removeCallbacks(mTicker);
@@ -333,7 +320,11 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
 
     @Override
     public void onLongClick(ServerItem it) {
-        // не используется пока
+        if (it.type == ServerItem.TYPE_MTPROTO) {
+            Toast.makeText(getActivity(), "Telegram-прокси привязан к подписке", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        showDeleteDialog(it);
     }
 
     private void onActionBtnClick() {
@@ -354,4 +345,71 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
             Toast.makeText(getActivity(), "Ошибка: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
+
+    private void setRefreshSpinning(boolean spinning) {
+        if (mRefreshBtn == null) return;
+        mRefreshBtn.setEnabled(!spinning);
+        mRefreshBtn.setAlpha(spinning ? 0.4f : 1.0f);
+    }
+
+    private void showDeleteDialog(ServerItem it) {
+        android.view.View v = getActivity().getLayoutInflater()
+            .inflate(R.layout.dialog_delete_server, null);
+        ((android.widget.TextView) v.findViewById(R.id.del_name)).setText(it.name);
+        ((android.widget.TextView) v.findViewById(R.id.del_addr)).setText(it.host + ":" + it.port);
+
+        final android.app.AlertDialog dialog = new android.app.AlertDialog.Builder(getActivity())
+            .setView(v)
+            .create();
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
+        v.findViewById(R.id.del_cancel).setOnClickListener(x -> dialog.dismiss());
+        v.findViewById(R.id.del_confirm).setOnClickListener(x -> {
+            hideServer(it.host + ":" + it.port);
+            try { mManager.removeProfile(it.name); } catch (Exception ignored) {}
+            dialog.dismiss();
+            Toast.makeText(getActivity(), "Удалено: " + it.name, Toast.LENGTH_SHORT).show();
+            refreshAll();
+        });
+
+        dialog.show();
+    }
+
+    private java.util.Set<String> getHidden() {
+        android.content.SharedPreferences sp = getActivity().getSharedPreferences("thek_prefs", 0);
+        String raw = sp.getString("hidden_servers", "");
+        java.util.Set<String> set = new java.util.HashSet<>();
+        if (raw != null && !raw.isEmpty()) {
+            for (String s : raw.split(",")) {
+                if (!s.isEmpty()) set.add(s);
+            }
+        }
+        return set;
+    }
+
+    private boolean isHidden(String key) {
+        return getHidden().contains(key);
+    }
+
+    private void hideServer(String key) {
+        android.content.SharedPreferences sp = getActivity().getSharedPreferences("thek_prefs", 0);
+        java.util.Set<String> set = getHidden();
+        set.add(key);
+        StringBuilder sb = new StringBuilder();
+        for (String s : set) {
+            if (sb.length() > 0) sb.append(",");
+            sb.append(s);
+        }
+        sp.edit().putString("hidden_servers", sb.toString()).apply();
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!mLoading) refreshAll();
+    }
+
 }
