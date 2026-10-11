@@ -442,31 +442,4 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
     }
 
 
-    @Override
-    public void onMtprotoOpen(ServerItem it) {
-        if (it.mtprotoLink == null || it.mtprotoLink.isEmpty()) {
-            android.widget.Toast.makeText(getActivity(),
-                "Ссылка недоступна",
-                android.widget.Toast.LENGTH_SHORT).show();
-            return;
-        }
-        try {
-            android.content.Intent i = new android.content.Intent(
-                android.content.Intent.ACTION_VIEW,
-                android.net.Uri.parse(it.mtprotoLink));
-            i.setPackage("org.telegram.messenger");
-            startActivity(i);
-        } catch (Exception e) {
-            try {
-                android.content.Intent i = new android.content.Intent(
-                    android.content.Intent.ACTION_VIEW,
-                    android.net.Uri.parse(it.mtprotoLink.replace("tg://", "https://t.me/")));
-                startActivity(i);
-            } catch (Exception e2) {
-                android.widget.Toast.makeText(getActivity(),
-                    "Telegram не установлен",
-                    android.widget.Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
 }
