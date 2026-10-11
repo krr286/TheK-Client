@@ -303,7 +303,12 @@ public class HomeFragment extends Fragment implements ServerAdapter.Listener {
                     int added = parseAndSaveServers(json);
                     android.content.SharedPreferences sp =
                         getActivity().getSharedPreferences("thek_prefs", 0);
-                    sp.edit().putBoolean("has_subscription", true).apply();
+                    sp.edit()
+                      .putBoolean("has_subscription", true)
+                      .putString("sub_token", code)
+                      .putString("code", code)
+                      .putString("user_code", code)
+                      .apply();
                     android.widget.Toast.makeText(getActivity(),
                         "✅ Подписка активирована! Добавлено серверов: " + added,
                         android.widget.Toast.LENGTH_LONG).show();
@@ -326,74 +331,72 @@ public class HomeFragment extends Fragment implements ServerAdapter.Listener {
     }
 
     private int parseAndSaveServers(String json) {
-        int added = 0;
-        try {
-            org.json.JSONObject obj = new org.json.JSONObject(json);
-            org.json.JSONArray arr = obj.optJSONArray("servers");
-            if (arr == null) return 0;
+    int added = 0;
+    try {
+        org.json.JSONObject obj = new org.json.JSONObject(json);
+        org.json.JSONArray arr = obj.optJSONArray("servers");
+        if (arr == null) return 0;
 
-            for (int i = 0; i < arr.length(); i++) {
-                String link = arr.getString(i);
-                // парсим socks5://user:pass@host:port#name
-                try {
-                    String body = link.replace("socks5://", "").replace("socks://", "");
-                    String name = "Server " + (i + 1);
-                    if (body.contains("#")) {
-                        name = java.net.URLDecoder.decode(body.substring(body.indexOf('#') + 1), "UTF-8");
-                        body = body.substring(0, body.indexOf('#'));
-                    }
-                    String user = null, pass = null, host;
-                    int port;
+        for (int i = 0; i < arr.length(); i++) {
+            Object raw = arr.get(i);
+            String name, host, user = "", pass = "";
+            int port = 1080;
 
-                    if (body.contains("@")) {
-                        String authPart = body.substring(0, body.indexOf('@'));
-                        body = body.substring(body.indexOf('@') + 1);
-                        if (authPart.contains(":")) {
-                            user = authPart.substring(0, authPart.indexOf(':'));
-                            pass = authPart.substring(authPart.indexOf(':') + 1);
-                        }
-                    }
-
-                    String[] hostPort = body.split(":");
-                    if (hostPort.length < 2) continue;
-                    host = hostPort[0];
-                    port = Integer.parseInt(hostPort[1]);
-
-                    // Пытаемся добавить профиль
-                    Profile p = mManager.addProfile(name);
-                    if (p == null) {
-                        p = mManager.addProfile(name + "_" + java.lang.System.currentTimeMillis());
-                    }
-                    if (p == null) continue;
-
-                    p.setServer(host);
-                    p.setPort(port);
-                    p.setIsUserpw(user != null);
-                    p.setUsername(user != null ? user : "");
-                    p.setPassword(pass != null ? pass : "");
-
-                    // Дефолты
-                    p.setRoute("all");
-                    p.setDns("8.8.8.8");
-                    p.setDnsPort(53);
-                    p.setIsPerApp(false);
-                    p.setIsBypassApp(false);
-                    p.setAppList("");
-                    p.setHasIPv6(false);
-                    p.setHasUDP(true);
-                    p.setUDPGW("77.239.101.146:7300");
-                    p.setAutoConnect(false);
-
-                    added++;
-                } catch (Exception e) {
-                    android.util.Log.e("THEK_CODE", "parse server error: " + e.getMessage());
+            if (raw instanceof org.json.JSONObject) {
+                org.json.JSONObject o = (org.json.JSONObject) raw;
+                name = o.optString("name", "Server " + (i + 1));
+                host = o.optString("host", "");
+                port = o.optInt("port", 1080);
+                user = o.optString("user", "");
+                pass = o.optString("pass", "");
+            } else {
+                String link = String.valueOf(raw);
+                String body = link.replace("socks5://", "").replace("socks://", "");
+                name = "Server " + (i + 1);
+                if (body.contains("#")) {
+                    name = java.net.URLDecoder.decode(body.substring(body.indexOf('#') + 1), "UTF-8");
+                    body = body.substring(0, body.indexOf('#'));
                 }
+                if (body.contains("@")) {
+                    String auth = body.substring(0, body.indexOf('@'));
+                    body = body.substring(body.indexOf('@') + 1);
+                    if (auth.contains(":")) {
+                        user = auth.substring(0, auth.indexOf(':'));
+                        pass = auth.substring(auth.indexOf(':') + 1);
+                    }
+                }
+                String[] hp = body.split(":");
+                if (hp.length < 2) continue;
+                host = hp[0];
+                try { port = Integer.parseInt(hp[1]); } catch (Exception e) { port = 1080; }
             }
-        } catch (Exception e) {
-            android.util.Log.e("THEK_CODE", "parse json error: " + e.getMessage());
+
+            if (host == null || host.isEmpty()) continue;
+
+            try {
+                if (!mManager.hasProfile(name)) mManager.addProfile(name);
+            } catch (Exception ignored) {
+                try { mManager.addProfile(name); } catch (Exception ignored2) {}
+            }
+            net.typeblog.socks.util.Profile p = mManager.getProfile(name);
+            if (p == null) continue;
+            p.setServer(host);
+            p.setPort(port);
+            p.setIsUserpw(user != null && !user.isEmpty());
+            p.setUsername(user == null ? "" : user);
+            p.setPassword(pass == null ? "" : pass);
+            p.setRoute("all");
+            p.setDns("8.8.8.8");
+            p.setDnsPort(53);
+            p.setHasIPv6(false);
+            p.setUDPGW("77.239.101.146:7300");
+            added++;
         }
-        return added;
+    } catch (Exception e) {
+        android.util.Log.e("THEK_PARSE", "parse error: " + e.getMessage(), e);
     }
+    return added;
+}
 
 
     public void showCodeDialog() {

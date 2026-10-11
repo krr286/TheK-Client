@@ -34,18 +34,13 @@ public class MainActivity extends AppCompatActivity {
         mToolbar.setNavigationOnClickListener(v -> mDrawer.openDrawer(GravityCompat.START));
 
         setNav(R.id.nav_home);
-        setNav(R.id.nav_telegram);
         setNav(R.id.nav_servers);
         setNav(R.id.nav_settings);
         setNav(R.id.nav_about);
 
-        // Показываем "Для Telegram" только подписчикам
-        android.content.SharedPreferences prefs = getSharedPreferences("thek_prefs", 0);
-        boolean hasSub = prefs.getBoolean("has_subscription", false);
-        if (!hasSub) {
-            View navTg = findViewById(R.id.nav_telegram);
-            if (navTg != null) navTg.setVisibility(View.GONE);
-        }
+        // "Для Telegram" отключено — MTProto теперь в разделе "Сервера"
+        View navTg = findViewById(R.id.nav_telegram);
+        if (navTg != null) navTg.setVisibility(View.GONE);
 
         // Синхронизация удалённых ресурсов
         try { RemoteAssets.sync(this); } catch (Exception ignored) {}
@@ -90,9 +85,7 @@ public class MainActivity extends AppCompatActivity {
         mCurrentNav = id;
 
         Fragment f;
-        if (id == R.id.nav_telegram) {
-            f = new TelegramFragment();
-        } else if (id == R.id.nav_servers) {
+        if (id == R.id.nav_servers) {
             f = new ServersFragment();
         } else if (id == R.id.nav_settings) {
             f = new SettingsFragment();
