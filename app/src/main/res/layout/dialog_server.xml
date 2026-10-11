@@ -10,15 +10,6 @@
         android:padding="24dp"
         android:background="@drawable/bg_dialog">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Новый сервер"
-            android:textColor="#F5F7FB"
-            android:textSize="20sp"
-            android:fontFamily="sans-serif-medium"
-            android:paddingBottom="20dp" />
-
         <EditText
             android:id="@+id/dlg_name"
             android:layout_width="match_parent"

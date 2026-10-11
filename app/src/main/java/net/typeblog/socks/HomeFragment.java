@@ -75,10 +75,29 @@ public class HomeFragment extends Fragment implements ServerAdapter.Listener {
         mCurrentServer = v.findViewById(R.id.current_server);
         mList = v.findViewById(R.id.servers_list);
 
-        // Кнопка обновления (из нового layout)
+        // Кнопка обновления на главной
         android.widget.ImageView homeRefresh = v.findViewById(R.id.home_refresh);
         if (homeRefresh != null) {
-            homeRefresh.setOnClickListener(x -> loadProfiles());
+            homeRefresh.setOnClickListener(x -> {
+                android.widget.Toast.makeText(getActivity(), "Обновляю...",
+                    android.widget.Toast.LENGTH_SHORT).show();
+                SubscriptionSync.forceSync(getActivity(), (added, removed, err) -> {
+                    if (getActivity() == null) return;
+                    getActivity().runOnUiThread(() -> {
+                        if (err != null) {
+                            android.widget.Toast.makeText(getActivity(),
+                                "Ошибка: " + err,
+                                android.widget.Toast.LENGTH_LONG).show();
+                        } else {
+                            loadProfiles();
+                            android.widget.Toast.makeText(getActivity(),
+                                "Готово: +" + added + " / -" + removed,
+                                android.widget.Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                });
+            });
+        }
         }
         mList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter = new ServerAdapter(mProfiles, this);
