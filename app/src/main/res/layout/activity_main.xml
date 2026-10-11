@@ -48,26 +48,24 @@
             <ImageView
                 android:id="@+id/drawer_logo"
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
+                android:layout_height="110dp"
                 android:layout_gravity="center_horizontal|top"
-                android:layout_marginTop="36dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginEnd="24dp"
+                android:layout_marginTop="48dp"
                 android:src="@drawable/ic_thek_graffiti"
-                android:scaleType="fitStart"
+                android:scaleType="centerInside"
                 android:visibility="visible" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="PROXY CLIENT"
+                android:text="P R O X Y   C L I E N T"
                 android:textColor="#A0A8BF"
                 android:textSize="11sp"
-                android:letterSpacing="0.4"
+                android:letterSpacing="0.3"
                 android:fontFamily="sans-serif-medium"
-                android:layout_gravity="bottom|start"
-                android:paddingStart="28dp"
-                android:paddingBottom="24dp" />
+                android:layout_gravity="bottom|center_horizontal"
+                android:gravity="center"
+                android:paddingBottom="22dp" />
         </FrameLayout>
 
         <LinearLayout
