@@ -208,4 +208,10 @@ public class MainActivity extends AppCompatActivity {
         if (mDrawer.isDrawerOpen(GravityCompat.START)) mDrawer.closeDrawers();
         else super.onBackPressed();
     }
+
+    public void showHomeAndConnect() {
+        // Сбрасываем mCurrentNav чтобы точно переключиться
+        mCurrentNav = -1;
+        selectItem(R.id.nav_home);
+    }
 }

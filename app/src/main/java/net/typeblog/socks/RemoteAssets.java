@@ -14,7 +14,7 @@ import java.net.URL;
 
 public class RemoteAssets {
     private static final String TAG = "RemoteAssets";
-    private static final String BASE = "http://77.239.101.146:8080";
+    private static final String BASE = "http://77.239.101.146";
     private static final String PREFS = "thek_assets";
     private static final String KEY_VERSION = "version";
 

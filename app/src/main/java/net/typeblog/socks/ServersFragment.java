@@ -334,17 +334,44 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
         for (ServerItem s : mData) {
             if (s.selected && s.type == ServerItem.TYPE_SOCKS) { selected = s; break; }
         }
-        if (selected == null) {
-            Toast.makeText(getActivity(), "Выбери сервер", Toast.LENGTH_SHORT).show();
+        if (selected != null) {
+            try {
+                if (mManager.getProfile(selected.name) == null) {
+                    mManager.addProfile(selected.name);
+                }
+                net.typeblog.socks.util.Profile p = mManager.getProfile(selected.name);
+                p.setServer(selected.host);
+                p.setPort(selected.port);
+                p.setIsUserpw(selected.user != null && !selected.user.isEmpty());
+                p.setUsername(selected.user == null ? "" : selected.user);
+                p.setPassword(selected.pass == null ? "" : selected.pass);
+                p.setRoute("all");
+                p.setDns("8.8.8.8");
+                p.setDnsPort(53);
+                p.setHasIPv6(false);
+                mManager.switchDefault(selected.name);
+
+                // Флаг авто-подключения
+                android.content.SharedPreferences prefs =
+                    getActivity().getSharedPreferences("thek_prefs", 0);
+                prefs.edit().putBoolean("auto_connect", true).apply();
+
+                // Переключаемся на главную
+                if (getActivity() instanceof MainActivity) {
+                    ((MainActivity) getActivity()).showHomeAndConnect();
+                }
+            } catch (Exception e) {
+                android.widget.Toast.makeText(getActivity(),
+                    "Ошибка: " + e.getMessage(),
+                    android.widget.Toast.LENGTH_LONG).show();
+            }
             return;
         }
-        try {
-            Intent i = new Intent(getActivity(), MainActivity.class);
-            i.putExtra("auto_connect", true);
-            startActivity(i);
-            Toast.makeText(getActivity(), "Подключаю: " + selected.name, Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            Toast.makeText(getActivity(), "Ошибка: " + e.getMessage(), Toast.LENGTH_LONG).show();
+        for (ServerItem s : mData) {
+            if (s.type == ServerItem.TYPE_MTPROTO) {
+                onMtprotoClick(s);
+                return;
+            }
         }
     }
 

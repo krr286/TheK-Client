@@ -273,7 +273,7 @@ public class HomeFragment extends Fragment implements ServerAdapter.Listener {
             String result = null;
             String serversJson = null;
             try {
-                java.net.URL url = new java.net.URL("http://77.239.101.146:8080/check/" + code);
+                java.net.URL url = new java.net.URL("http://77.239.101.146/check/" + code);
                 java.net.HttpURLConnection c = (java.net.HttpURLConnection) url.openConnection();
                 c.setConnectTimeout(7000);
                 c.setReadTimeout(7000);
@@ -483,4 +483,29 @@ public class HomeFragment extends Fragment implements ServerAdapter.Listener {
         } catch (Exception ignored) {}
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkAutoConnect();
+    }
+
+    private void checkAutoConnect() {
+        android.content.SharedPreferences prefs =
+            getActivity().getSharedPreferences("thek_prefs", 0);
+        boolean auto = prefs.getBoolean("auto_connect", false);
+        if (!auto) return;
+        prefs.edit().putBoolean("auto_connect", false).apply();
+        // Ждём пока сервис биндится
+        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+            if (getActivity() == null) return;
+            if (!mRunning) {
+                try {
+                    toggleConnect();
+                } catch (Exception e) {
+                    android.util.Log.e("THEK_AUTO", "auto connect err: " + e.getMessage());
+                }
+            }
+        }, 600);
+    }
 }

@@ -76,7 +76,7 @@ public class SubscriptionSync {
             String error = null;
 
             try {
-                URL url = new URL("http://77.239.101.146:8080/check/" + code);
+                URL url = new URL("http://77.239.101.146/check/" + code);
                 HttpURLConnection c = (HttpURLConnection) url.openConnection();
                 c.setConnectTimeout(7000);
                 c.setReadTimeout(7000);
