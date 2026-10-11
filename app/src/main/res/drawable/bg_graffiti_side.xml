@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="300dp"
+    android:height="220dp"
+    android:viewportWidth="300"
+    android:viewportHeight="220"
+    android:alpha="0.12">
+
+    <!-- Левый верхний каракуль -->
+    <path
+        android:pathData="M10,40 Q30,20 50,35 Q70,50 55,70 Q40,90 25,70 Q15,55 35,45"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:fillColor="#00000000" />
+
+    <!-- Верхние петли -->
+    <path
+        android:pathData="M80,15 Q100,5 120,20 Q135,32 125,50"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:fillColor="#00000000" />
+
+    <path
+        android:pathData="M150,25 L175,15 L180,35 L165,45 Z"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:fillColor="#00000000" />
+
+    <!-- Правый каракуль -->
+    <path
+        android:pathData="M200,30 Q220,15 240,30 Q260,50 245,70 Q230,85 215,70"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:fillColor="#00000000" />
+
+    <path
+        android:pathData="M260,90 L280,80 L285,110 L265,120 Z"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:fillColor="#00000000" />
+
+    <!-- Нижние линии -->
+    <path
+        android:pathData="M20,140 Q60,120 100,150 Q140,180 180,145 Q220,115 260,140"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:fillColor="#00000000" />
+
+    <path
+        android:pathData="M30,180 L70,170 L90,195 L50,205 Z"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:fillColor="#00000000" />
+
+    <path
+        android:pathData="M120,175 Q150,160 180,180 Q200,195 190,210"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:fillColor="#00000000" />
+</vector>

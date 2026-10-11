@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="96dp"
-    android:height="96dp"
-    android:viewportWidth="96"
-    android:viewportHeight="96">
-    <!-- Верхняя наклонная полоса -->
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Градиентный фон (свечение) -->
     <path
-        android:pathData="M12,20 L76,12 L80,26 L22,32 Z"
+        android:pathData="M54,4 A50,50 0 1,1 53.99,4 Z"
+        android:fillColor="#153B82F6" />
+
+    <!-- Верхняя планка буквы T — толстая, наклонная -->
+    <path
+        android:pathData="M18,26 L92,20 L94,38 L86,38 L88,32 L22,38 Z"
         android:fillColor="#7C5CFF" />
-    <!-- Нижняя наклонная полоса -->
+
+    <!-- Ножка буквы T — толстая, с изгибом -->
     <path
-        android:pathData="M42,36 L60,32 L72,76 L54,80 Z"
+        android:pathData="M48,38 L70,34 L70,44 L66,44 L74,78 L84,82 L82,92 L52,96 L48,86 L58,82 L50,44 L44,44 Z"
         android:fillColor="#3B82F6" />
-    <!-- Акцент -->
+
+    <!-- Акцент — яркий блик -->
     <path
-        android:pathData="M52,38 L66,34 L70,50 L56,54 Z"
+        android:pathData="M54,42 L62,40 L64,60 L58,62 Z"
         android:fillColor="#22D3EE" />
 </vector>

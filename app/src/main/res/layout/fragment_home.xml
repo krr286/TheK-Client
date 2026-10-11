@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:minHeight="360dp">
+            android:minHeight="320dp">
 
             <FrameLayout
                 android:id="@+id/connect_button"
@@ -40,7 +40,7 @@
                 android:layout_gravity="bottom"
                 android:orientation="vertical"
                 android:gravity="center_horizontal"
-                android:paddingBottom="24dp">
+                android:paddingBottom="20dp">
 
                 <TextView
                     android:id="@+id/home_status"
@@ -106,10 +106,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/servers_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:maxHeight="280dp"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:paddingBottom="14dp"
             android:clipToPadding="false" />
 

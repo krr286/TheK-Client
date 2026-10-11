@@ -37,21 +37,20 @@
         android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#0F1422"
         android:orientation="vertical">
 
         <!-- Шапка с граффити -->
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="200dp"
             android:background="@drawable/bg_drawer_header">
 
             <ImageView
                 android:id="@+id/drawer_logo"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="120dp"
                 android:layout_gravity="center_horizontal|top"
-                android:layout_marginTop="60dp"
+                android:layout_marginTop="36dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
                 android:src="@drawable/ic_thek_graffiti"
@@ -84,7 +83,7 @@
             android:layout_marginEnd="12dp"
             android:background="?android:attr/selectableItemBackground">
             <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_nav_home" android:tint="#7C5CFF" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:text="Главная" android:textColor="#F5F7FB" android:textSize="15sp" android:fontFamily="sans-serif-medium" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:text="Главная" android:textColor="#F5F7FB" android:textSize="16sp" android:textStyle="bold" android:fontFamily="sans-serif-black" />
         </LinearLayout>
 
         <LinearLayout
@@ -115,7 +114,7 @@
             android:layout_marginEnd="12dp"
             android:background="?android:attr/selectableItemBackground">
             <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_nav_servers" android:tint="#7C5CFF" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:text="Сервера" android:textColor="#F5F7FB" android:textSize="15sp" android:fontFamily="sans-serif-medium" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:text="Сервера" android:textColor="#F5F7FB" android:textSize="16sp" android:textStyle="bold" android:fontFamily="sans-serif-black" />
         </LinearLayout>
 
         <View
@@ -139,7 +138,7 @@
             android:layout_marginEnd="12dp"
             android:background="?android:attr/selectableItemBackground">
             <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_nav_settings" android:tint="#7C5CFF" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:text="Настройки" android:textColor="#F5F7FB" android:textSize="15sp" android:fontFamily="sans-serif-medium" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:text="Настройки" android:textColor="#F5F7FB" android:textSize="16sp" android:textStyle="bold" android:fontFamily="sans-serif-black" />
         </LinearLayout>
 
         <LinearLayout
@@ -154,7 +153,7 @@
             android:layout_marginEnd="12dp"
             android:background="?android:attr/selectableItemBackground">
             <ImageView android:layout_width="22dp" android:layout_height="22dp" android:src="@drawable/ic_nav_info" android:tint="#7C5CFF" />
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:text="О приложении" android:textColor="#F5F7FB" android:textSize="15sp" android:fontFamily="sans-serif-medium" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="18dp" android:text="О приложении" android:textColor="#F5F7FB" android:textSize="16sp" android:textStyle="bold" android:fontFamily="sans-serif-black" />
         </LinearLayout>
 
         <View android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" />

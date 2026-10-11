@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="10dp"
-    android:layout_marginEnd="10dp"
+    android:layout_marginStart="14dp"
+    android:layout_marginEnd="14dp"
     android:layout_marginBottom="8dp"
     android:orientation="horizontal"
     android:gravity="center_vertical"
@@ -12,8 +12,8 @@
 
     <TextView
         android:id="@+id/srv_flag"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
         android:text="●"
         android:textSize="22sp"
         android:gravity="center"
@@ -28,18 +28,21 @@
 
         <TextView
             android:id="@+id/srv_name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Сервер"
             android:textColor="#F5F7FB"
             android:textSize="15sp"
-            android:fontFamily="sans-serif-medium" />
+            android:fontFamily="sans-serif-medium"
+            android:singleLine="true"
+            android:ellipsize="end" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="3dp">
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical">
 
             <TextView
                 android:id="@+id/srv_addr"
@@ -47,7 +50,8 @@
                 android:layout_height="wrap_content"
                 android:text="0.0.0.0:0"
                 android:textColor="#A0A8BF"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:singleLine="true" />
 
             <TextView
                 android:id="@+id/srv_ping"
@@ -56,7 +60,10 @@
                 android:text=""
                 android:textColor="#A0A8BF"
                 android:textSize="12sp"
-                android:layout_marginStart="8dp" />
+                android:layout_marginStart="10dp"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:maxLines="1" />
         </LinearLayout>
     </LinearLayout>
 
@@ -66,8 +73,9 @@
         android:layout_height="wrap_content"
         android:text=""
         android:textSize="12sp"
-        android:layout_marginEnd="8dp"
-        android:textColor="#A0A8BF" />
+        android:layout_marginEnd="6dp"
+        android:textColor="#A0A8BF"
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/srv_check"

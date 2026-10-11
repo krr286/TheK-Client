@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="240dp"
-    android:height="72dp"
-    android:viewportWidth="240"
-    android:viewportHeight="72">
+    android:width="280dp"
+    android:height="100dp"
+    android:viewportWidth="280"
+    android:viewportHeight="100">
+
+    <!-- T — большая наклонная -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M8,20 L52,18 L54,26 L18,28 L16,54 L10,55 Z" />
+        android:pathData="M12,18 L78,12 L82,32 L56,34 L58,60 L60,84 L36,86 L34,58 L30,32 L8,34 Z" />
+
+    <!-- H — с двумя вертикалями -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M58,22 L64,21 L62,38 L86,36 L88,22 L94,21 L92,54 L86,55 L88,44 L62,46 L60,55 L54,54 Z" />
+        android:pathData="M86,14 L108,12 L106,42 L134,38 L132,12 L154,10 L158,86 L136,88 L138,56 L110,60 L108,86 L86,88 Z" />
+
+    <!-- E — с закруглениями -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M104,22 L142,20 L144,28 L110,30 L110,38 L140,36 L141,44 L110,46 L110,54 L144,52 L145,60 L104,62 Z" />
+        android:pathData="M164,12 L232,8 L236,28 L188,32 L188,42 L224,40 L226,58 L188,60 L188,70 L238,68 L240,88 L164,92 Z" />
+
+    <!-- K — с острыми линиями -->
     <path
         android:fillColor="#FFFFFF"
-        android:pathData="M152,22 L158,21 L158,38 L178,20 L186,19 L164,40 L188,54 L180,55 L158,42 L158,55 L152,54 Z" />
+        android:pathData="M248,12 L268,10 L268,38 L286,14 L312,12 L284,46 L316,84 L292,86 L266,54 L268,86 L248,88 Z" />
 </vector>
