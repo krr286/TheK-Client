@@ -34,6 +34,7 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
     private final List<ServerItem> mData = new ArrayList<>();
     private RecyclerView mRv;
     private TextView mEmpty;
+    private TextView mActionBtn;
     private ProfileManager mManager;
     private Handler mHandler;
     private Runnable mTicker;
@@ -45,6 +46,10 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
         mManager = new ProfileManager(getActivity().getApplicationContext());
         mRv = v.findViewById(R.id.servers_rv);
         mEmpty = v.findViewById(R.id.servers_empty);
+        mActionBtn = v.findViewById(R.id.servers_action_btn);
+        if (mActionBtn != null) {
+            mActionBtn.setOnClickListener(x -> onActionBtnClick());
+        }
 
         android.widget.ImageButton btnRefresh = v.findViewById(R.id.btn_refresh_servers);
         if (btnRefresh != null) btnRefresh.setOnClickListener(x -> refreshAll());
@@ -184,6 +189,7 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
                 }
 
                 mLoading = false;
+                updateActionButton();
                 pingAll();
             });
         }).start();
@@ -244,7 +250,12 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
             p.setPassword(it.pass == null ? "" : it.pass);
             mManager.switchDefault(it.name);
             Toast.makeText(getActivity(), "Выбран: " + it.name, Toast.LENGTH_SHORT).show();
-            refreshAll();
+            updateActionButton();
+            // Обновляем галочки
+            for (ServerItem s : mData) {
+                s.selected = s.name.equals(it.name) && s.type == ServerItem.TYPE_SOCKS;
+            }
+            mAdapter.notifyDataSetChanged();
         } catch (Exception e) {
             Toast.makeText(getActivity(), "Ошибка: " + e.getMessage(), Toast.LENGTH_LONG).show();
         }
@@ -275,4 +286,53 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
             }
         }
     }
+
+    private void updateActionButton() {
+        if (mActionBtn == null) return;
+        ServerItem selected = null;
+        for (ServerItem s : mData) {
+            if (s.selected && s.type == ServerItem.TYPE_SOCKS) { selected = s; break; }
+        }
+        boolean hasMt = false;
+        for (ServerItem s : mData) {
+            if (s.type == ServerItem.TYPE_MTPROTO) { hasMt = true; break; }
+        }
+        if (selected != null) {
+            mActionBtn.setVisibility(View.VISIBLE);
+            mActionBtn.setText("\uD83D\uDD0C Подключить: " + selected.name);
+        } else if (hasMt) {
+            mActionBtn.setVisibility(View.VISIBLE);
+            mActionBtn.setText("\u2708\uFE0F Открыть Telegram");
+        } else {
+            mActionBtn.setVisibility(View.GONE);
+        }
+    }
+
+    private void onActionBtnClick() {
+        ServerItem selected = null;
+        for (ServerItem s : mData) {
+            if (s.selected && s.type == ServerItem.TYPE_SOCKS) { selected = s; break; }
+        }
+        if (selected != null) {
+            // Запускаем VPN на выбранном SOCKS5
+            android.widget.Toast.makeText(getActivity(), "Подключаю: " + selected.name, android.widget.Toast.LENGTH_SHORT).show();
+            // Переключаемся на главную и запускаем VPN
+            try {
+                android.content.Intent i = new android.content.Intent(getActivity(), MainActivity.class);
+                i.putExtra("auto_connect", true);
+                startActivity(i);
+            } catch (Exception e) {
+                android.widget.Toast.makeText(getActivity(), "Ошибка: " + e.getMessage(), android.widget.Toast.LENGTH_LONG).show();
+            }
+            return;
+        }
+        // Если SOCKS5 не выбран, но есть MTProto — открываем Telegram
+        for (ServerItem s : mData) {
+            if (s.type == ServerItem.TYPE_MTPROTO) {
+                onMtprotoClick(s);
+                return;
+            }
+        }
+    }
+
 }
