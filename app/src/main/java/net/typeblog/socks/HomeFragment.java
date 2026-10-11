@@ -98,7 +98,7 @@ public class HomeFragment extends Fragment implements ServerAdapter.Listener {
                 });
             });
         }
-        }
+
         mList.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter = new ServerAdapter(mProfiles, this);
         mList.setAdapter(mAdapter);
