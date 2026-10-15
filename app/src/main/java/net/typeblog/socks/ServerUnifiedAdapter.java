@@ -91,15 +91,24 @@ public class ServerUnifiedAdapter extends RecyclerView.Adapter<RecyclerView.View
             else h.ping.setTextColor(0xFFFF3F3F);
         }
 
-        // Кнопка внутри карточки — только для MTProto
+        // Кнопка действия
         if (isMt) {
             h.action.setVisibility(View.VISIBLE);
+            h.action.setText("Открыть");
             h.action.setOnClickListener(v -> mListener.onMtprotoOpen(it));
-            // Клик по карточке тоже открывает
             h.itemView.setOnClickListener(v -> mListener.onMtprotoOpen(it));
             h.itemView.setOnLongClickListener(null);
         } else {
-            h.action.setVisibility(View.GONE);
+            // SOCKS5: если текущий — галочка (уже есть), если нет — кнопка "Переключить"
+            if (it.isCurrent) {
+                h.action.setVisibility(View.GONE);
+            } else if (it.proxyId > 0) {
+                h.action.setVisibility(View.VISIBLE);
+                h.action.setText("Переключить");
+                h.action.setOnClickListener(v -> mListener.onSelect(it));
+            } else {
+                h.action.setVisibility(View.GONE);
+            }
             h.itemView.setOnClickListener(v -> mListener.onSelect(it));
             h.itemView.setOnLongClickListener(v -> {
                 mListener.onLongClick(it);

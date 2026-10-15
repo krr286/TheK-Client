@@ -161,6 +161,11 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
                             it.pass = o.optString("pass", "");
                             it.loadCur = o.optInt("load_cur", 0);
                             it.loadMax = o.optInt("load_max", 10);
+                            it.proxyId = o.optInt("proxy_id", -1);
+                            it.isCurrent = o.optBoolean("is_current", false);
+                            // Показываем display_name если есть
+                            String dn = o.optString("display_name", "");
+                            if (!dn.isEmpty()) it.name = dn;
                             // Пропускаем скрытые серверы
                             if (isHidden(it.host + ":" + it.port)) continue;
                             socksList.add(it);
@@ -172,12 +177,19 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
                         head.name = "Сетевые прокси \u00B7 SOCKS5";
                         list.add(head);
 
-                        // Отмечаем выбранный
-                        String defName = mManager.getDefault().getName();
+                        // Отмечаем текущий (is_current от сервера)
+                        boolean anyCurrent = false;
                         for (ServerItem it : socksList) {
-                            if (it.name.equals(defName)) it.selected = true;
-                            list.add(it);
+                            if (it.isCurrent) { it.selected = true; anyCurrent = true; }
                         }
+                        // Fallback: если сервер не отдал is_current — из profile
+                        if (!anyCurrent) {
+                            String defName = mManager.getDefault().getName();
+                            for (ServerItem it : socksList) {
+                                if (it.name.equals(defName)) it.selected = true;
+                            }
+                        }
+                        for (ServerItem it : socksList) list.add(it);
                     }
                 }
             } catch (Exception e) {
@@ -297,6 +309,57 @@ public class ServersFragment extends Fragment implements ServerUnifiedAdapter.Li
         } catch (Exception e) {
             android.util.Log.e("THEK_SEL", "save: " + e.getMessage());
         }
+    }
+
+    /**
+     * Переключить юзера на другой прокси через /switch/{token}/{proxy_id}.
+     */
+    private void _switchToProxy(final ServerItem target) {
+        final String code = getSubCode();
+        if (code == null || code.isEmpty()) {
+            Toast.makeText(getActivity(), "Нет кода подписки", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Toast.makeText(getActivity(), "Переключаю на " + target.name + "...", Toast.LENGTH_SHORT).show();
+
+        new Thread(() -> {
+            String result = null;
+            String error = null;
+            try {
+                String url = "http://77.239.101.146:8080/switch/" + code + "/" + target.proxyId;
+                java.net.HttpURLConnection c = (java.net.HttpURLConnection) new java.net.URL(url).openConnection();
+                c.setConnectTimeout(10000);
+                c.setReadTimeout(10000);
+                c.setRequestMethod("GET");
+                int rc = c.getResponseCode();
+                java.io.BufferedReader br = new java.io.BufferedReader(
+                    new java.io.InputStreamReader(rc == 200 ? c.getInputStream() : c.getErrorStream()));
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = br.readLine()) != null) sb.append(line);
+                br.close();
+                c.disconnect();
+                if (rc == 200) {
+                    result = "OK";
+                } else {
+                    error = "HTTP " + rc + ": " + sb.toString();
+                }
+            } catch (Exception e) {
+                error = e.getMessage();
+            }
+
+            final String res = result;
+            final String err = error;
+            if (getActivity() == null) return;
+            getActivity().runOnUiThread(() -> {
+                if (res != null) {
+                    Toast.makeText(getActivity(), "✅ Переключено на " + target.name, Toast.LENGTH_SHORT).show();
+                    refreshAll();
+                } else {
+                    Toast.makeText(getActivity(), "❌ Ошибка: " + err, Toast.LENGTH_LONG).show();
+                }
+            });
+        }).start();
     }
 
     @Override
